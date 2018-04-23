@@ -11,10 +11,12 @@ import android.os.Bundle;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 
+import ru.lantimat.photogallery.browse.ImagesListFragment;
+
 public class MainActivity extends AppCompatActivity {
 
     static final String TAG = "MainActivity";
-    static final int PAGE_COUNT = 2;
+    static final int PAGE_COUNT = 1;
 
     private ViewPager pager;
     private PagerAdapter pagerAdapter;
@@ -24,6 +26,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        setupBottomBar();
+        initViewPager();
     }
 
     private void setupBottomBar() { //Инициализация нижнего бара
@@ -31,13 +36,13 @@ public class MainActivity extends AppCompatActivity {
 
 
         //Создаем айтемы
-        //AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.tab_1, R.drawable.ic_access_point_white_24dp, R.color.colorBottomNavigationPrimary);
-        //AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.tab_2, R.drawable.ic_newspaper_white_24dp, R.color.colorBottomNavigationPrimary);
+        AHBottomNavigationItem item1 = new AHBottomNavigationItem("One", R.drawable.ic_launcher_foreground, R.color.colorBottomNavigationPrimary);
+        //AHBottomNavigationItem item2 = new AHBottomNavigationItem("Two", R.drawable.ic_launcher_background, R.color.colorBottomNavigationPrimary);
         //AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.tab_3, R.drawable.ic_instagram_white_24dp, R.color.colorBottomNavigationPrimary);
         //AHBottomNavigationItem item4 = new AHBottomNavigationItem(R.string.tab_4, R.drawable.ic_dots_horizontal_white_24dp, R.color.colorBottomNavigationPrimary);
 
         //Добавляем в бар
-        //bottomNavigation.addItem(item1);
+        bottomNavigation.addItem(item1);
         //bottomNavigation.addItem(item2);
         //bottomNavigation.addItem(item3);
         //bottomNavigation.addItem(item4);
@@ -59,36 +64,7 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
             @Override
             public boolean onTabSelected(int position, boolean wasSelected) {
-                //Toast.makeText(ctx, position + " tab clicked", Toast.LENGTH_SHORT).show();
-                /*Fragment fragment = null;
-
-                // на основании выбранного элемента меню
-                // вызываем соответственный ему фрагмент
-                switch (position) {
-                    case 0:
-                        //fragment = new RadioFragment();
-                        break;
-                    case 1:
-                        //fragment = new FeedFragment();
-                        break;
-                    case 2:
-                        //fragment = new InstagramFragment();
-                        break;
-                    case 3:
-                        //fragment = new FeedFragment();
-                        break;
-                    default:
-                        break;
-                }
-
-                if(fragment != null) {
-                    FragmentManager fragmentManager = getSupportFragmentManager();
-                    fragmentManager.beginTransaction().replace(R.id.content, fragment, fragment.getTag()).commit();
-                }*/
-
                 pager.setCurrentItem(position);
-
-
                 return true;
             }
         });
@@ -103,6 +79,14 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void initViewPager() {
+
+        //Инициализация ViewPager
+        pager = (ViewPager) findViewById(R.id.viewPager);
+        pagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
+        pager.setAdapter(pagerAdapter);
+        pager.setOffscreenPageLimit(2);
+    }
 
     private class MyFragmentPagerAdapter extends FragmentPagerAdapter {
 
@@ -114,9 +98,9 @@ public class MainActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    //return new CoolRadioFragment();
+                    return new ImagesListFragment();
                 case 1:
-                    //return new FeedFragment();
+                    return new ImagesListFragment();
             }
             return null;
         }
