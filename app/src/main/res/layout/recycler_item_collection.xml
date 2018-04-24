@@ -18,4 +18,15 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@mipmap/ic_launcher" />
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:foregroundGravity="center"
+        android:gravity="center"
+        android:shadowColor="@android:color/black"
+        android:text="TextViewweeeeeeeeeeeeeeeee"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
 </RelativeLayout>

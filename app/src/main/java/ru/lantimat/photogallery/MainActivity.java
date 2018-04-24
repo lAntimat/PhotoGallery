@@ -7,48 +7,60 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 
-import ru.lantimat.photogallery.browse.ImagesListFragment;
+import ru.lantimat.photogallery.browse.CollectionFragment;
+import ru.lantimat.photogallery.browse.collections.CategoryListFragment;
+import ru.lantimat.photogallery.browse.PhotosFragment;
+import ru.lantimat.photogallery.utils.NonSwipeableViewPager;
 
 public class MainActivity extends AppCompatActivity {
 
     static final String TAG = "MainActivity";
-    static final int PAGE_COUNT = 1;
+    static final int PAGE_COUNT = 2;
 
-    private ViewPager pager;
+    private NonSwipeableViewPager pager;
     private PagerAdapter pagerAdapter;
-
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        //getSupportActionBar().setTitle("MainActivity");
+        //getSupportActionBar().setSubtitle("MainActivity");
         setupBottomBar();
         initViewPager();
     }
+
+
 
     private void setupBottomBar() { //Инициализация нижнего бара
         AHBottomNavigation bottomNavigation = (AHBottomNavigation) findViewById(R.id.bottom_navigation);
 
 
         //Создаем айтемы
-        AHBottomNavigationItem item1 = new AHBottomNavigationItem("One", R.drawable.ic_launcher_foreground, R.color.colorBottomNavigationPrimary);
-        //AHBottomNavigationItem item2 = new AHBottomNavigationItem("Two", R.drawable.ic_launcher_background, R.color.colorBottomNavigationPrimary);
+        AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.bottom_bar_collection, R.drawable.ic_launcher_foreground, R.color.colorBottomNavigationPrimary);
+        AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.bottom_bar_photo, R.drawable.ic_launcher_foreground, R.color.colorBottomNavigationPrimary);
         //AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.tab_3, R.drawable.ic_instagram_white_24dp, R.color.colorBottomNavigationPrimary);
         //AHBottomNavigationItem item4 = new AHBottomNavigationItem(R.string.tab_4, R.drawable.ic_dots_horizontal_white_24dp, R.color.colorBottomNavigationPrimary);
 
         //Добавляем в бар
         bottomNavigation.addItem(item1);
-        //bottomNavigation.addItem(item2);
+        bottomNavigation.addItem(item2);
         //bottomNavigation.addItem(item3);
         //bottomNavigation.addItem(item4);
 
         // Manage titles
         bottomNavigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
+
+        bottomNavigation.setBehaviorTranslationEnabled(false);
 
         //bottomNavigation.setAccentColor(ContextCompat.getColor(this, R.color.md_blue_900));
 
@@ -82,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
     private void initViewPager() {
 
         //Инициализация ViewPager
-        pager = (ViewPager) findViewById(R.id.viewPager);
+        pager = findViewById(R.id.viewPager);
         pagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
         pager.setAdapter(pagerAdapter);
         pager.setOffscreenPageLimit(2);
@@ -98,9 +110,9 @@ public class MainActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return new ImagesListFragment();
+                    return new CollectionFragment();
                 case 1:
-                    return new ImagesListFragment();
+                    return new PhotosFragment();
             }
             return null;
         }

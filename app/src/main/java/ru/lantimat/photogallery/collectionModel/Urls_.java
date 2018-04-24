@@ -1,10 +1,10 @@
 
-package ru.lantimat.photogallery.models;
+package ru.lantimat.photogallery.collectionModel;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Urls {
+public class Urls_ {
 
     @SerializedName("raw")
     @Expose

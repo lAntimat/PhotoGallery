@@ -1,7 +1,13 @@
-package ru.lantimat.photogallery.browse;
+package ru.lantimat.photogallery.browse.photos;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.transition.ChangeBounds;
+import android.support.transition.ChangeImageTransform;
+import android.support.transition.ChangeTransform;
+import android.support.transition.Fade;
+import android.support.transition.TransitionSet;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,22 +21,26 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import ru.lantimat.photogallery.R;
-import ru.lantimat.photogallery.models.Photo;
+import ru.lantimat.photogallery.browse.fullScreenImage.FragmentFullscreenImage;
+import ru.lantimat.photogallery.browse.fullScreenImage.FullSizeImageListener;
+import ru.lantimat.photogallery.photosModel.Photo;
 import ru.lantimat.photogallery.utils.ItemClickSupport;
 
 /**
  * Created by GabdrakhmanovII on 28.07.2017.
  */
 
-public class ImagesListFragment extends Fragment implements BrowseMVP.View {
+public class ImagesListFragment extends Fragment implements PhotosMVP.View {
 
     final static String TAG = "ImagesListFragment";
 
     private RecyclerView recyclerView;
     private ImagesRecyclerAdapter adapter;
     private ArrayList<Photo> ar = new ArrayList<>();
-    private BrowseMVP.Presenter presenter;
+    private PhotosMVP.Presenter presenter;
     private ProgressBar progressBar;
+    private FullSizeImageListener fullSizeImageListener;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,11 +55,18 @@ public class ImagesListFragment extends Fragment implements BrowseMVP.View {
         progressBar = v.findViewById(R.id.progressBar);
         initRecyclerView(v);
 
-        presenter = new Presenter();
-        presenter.attachView(this);
-        presenter.getPhotos();
+        String orderBy = getArguments().get("orderBy").toString();
+        if(orderBy!=null) {
+            presenter = new Presenter(orderBy);
+            presenter.attachView(this);
+            presenter.getPhotos();
+        }
 
         return v;
+    }
+
+    public void registerFullSizeImageListener(FullSizeImageListener listener) {
+        fullSizeImageListener = listener;
     }
 
     @Override
@@ -100,9 +117,31 @@ public class ImagesListFragment extends Fragment implements BrowseMVP.View {
 
     @Override
     public void showPhotos(ArrayList<Photo> ar) {
+        if(fullSizeImageListener!=null) fullSizeImageListener.onAdd(ar); //обновляем массив в Фрагменте
         this.ar.clear();
         this.ar.addAll(ar);
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onItemClick(int position, ArrayList<Photo> ar) {
+
+        FragmentFullscreenImage fragment = FragmentFullscreenImage.newInstance(position, ar);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            fragment.setSharedElementEnterTransition(new DetailsTransition());
+            fragment.setEnterTransition(new Fade());
+            setExitTransition(new Fade());
+            fragment.setSharedElementReturnTransition(new DetailsTransition());
+        }
+
+        RecyclerView.ViewHolder holder = recyclerView.findViewHolderForAdapterPosition(position);
+        getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .addSharedElement(((ImagesRecyclerAdapter.ViewHolder) holder).imageView, "testTransition")
+                .replace(R.id.container, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override
@@ -118,5 +157,14 @@ public class ImagesListFragment extends Fragment implements BrowseMVP.View {
     @Override
     public void showError(String error) {
         Toast.makeText(getContext(), error, Toast.LENGTH_LONG).show();
+    }
+
+    public class DetailsTransition extends TransitionSet {
+        public DetailsTransition() {
+            setOrdering(ORDERING_TOGETHER);
+            addTransition(new ChangeBounds()).
+                    addTransition(new ChangeTransform()).
+                    addTransition(new ChangeImageTransform());
+        }
     }
 }

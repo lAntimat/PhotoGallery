@@ -1,11 +1,15 @@
 
-package ru.lantimat.photogallery.models;
+package ru.lantimat.photogallery.photosModel;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.util.ArrayList;
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Photo {
+public class Photo implements Parcelable {
 
     @SerializedName("id")
     @Expose
@@ -173,4 +177,61 @@ public class Photo {
         this.currentUserCollections = currentUserCollections;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.id);
+        dest.writeString(this.createdAt);
+        dest.writeString(this.updatedAt);
+        dest.writeValue(this.width);
+        dest.writeValue(this.height);
+        dest.writeString(this.color);
+        dest.writeList(this.categories);
+        dest.writeParcelable(this.user, flags);
+        dest.writeParcelable(this.urls, flags);
+        dest.writeParcelable(this.links, flags);
+        dest.writeValue(this.likedByUser);
+        dest.writeValue(this.sponsored);
+        dest.writeValue(this.likes);
+        dest.writeList(this.currentUserCollections);
+    }
+
+    public Photo() {
+    }
+
+    protected Photo(Parcel in) {
+        this.id = in.readString();
+        this.createdAt = in.readString();
+        this.updatedAt = in.readString();
+        this.width = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.height = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.color = in.readString();
+        this.description = in.readParcelable(Object.class.getClassLoader());
+        this.categories = new ArrayList<Object>();
+        in.readList(this.categories, Object.class.getClassLoader());
+        this.user = in.readParcelable(User.class.getClassLoader());
+        this.urls = in.readParcelable(Urls.class.getClassLoader());
+        this.links = in.readParcelable(Links_.class.getClassLoader());
+        this.likedByUser = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.sponsored = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.likes = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.currentUserCollections = new ArrayList<Object>();
+        in.readList(this.currentUserCollections, Object.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<Photo> CREATOR = new Parcelable.Creator<Photo>() {
+        @Override
+        public Photo createFromParcel(Parcel source) {
+            return new Photo(source);
+        }
+
+        @Override
+        public Photo[] newArray(int size) {
+            return new Photo[size];
+        }
+    };
 }

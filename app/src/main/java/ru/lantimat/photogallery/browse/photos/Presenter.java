@@ -1,20 +1,25 @@
-package ru.lantimat.photogallery.browse;
+package ru.lantimat.photogallery.browse.photos;
 
 import java.util.ArrayList;
 
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import ru.lantimat.photogallery.API.ApiUtils;
 import ru.lantimat.photogallery.API.UnsplashAPI;
-import ru.lantimat.photogallery.models.Photo;
+import ru.lantimat.photogallery.browse.photos.PhotosMVP;
+import ru.lantimat.photogallery.photosModel.Photo;
 
-public class Presenter implements BrowseMVP.Presenter {
+public class Presenter implements PhotosMVP.Presenter {
 
-    private static int PER_PAGE = 30; //Количество Items за один запрос
-    private BrowseMVP.View view;
+    //Виды сортировки фотографий
+    public static String SORT_LATEST = "latest"; //Новейшие
+    public static String SORT_OLDEST = "oldest"; //Старейшие
+    public static String SORT_POPULAR = "popular"; //Популярные
+    private String orderBy = SORT_LATEST; //По умолчанию latest
+
+    private static int PER_PAGE = 50; //Количество Items за один запрос
+    private PhotosMVP.View view;
     private UnsplashAPI api;
     private DisposableObserver disposable;
     private int page = 1;
@@ -22,12 +27,13 @@ public class Presenter implements BrowseMVP.Presenter {
     private static boolean isOnRefresh = false;
     private ArrayList<Photo> ar = new ArrayList<>();
 
-    public Presenter() {
+    public Presenter(String orderBy) {
+        this.orderBy = orderBy;
         api = ApiUtils.getUnsplashAPI();
     }
 
     @Override
-    public void attachView(BrowseMVP.View view) {
+    public void attachView(PhotosMVP.View view) {
         this.view = view;
     }
 
@@ -60,6 +66,11 @@ public class Presenter implements BrowseMVP.Presenter {
         loadPhotos(page);
     }
 
+    @Override
+    public void itemClick(int position) {
+        view.onItemClick(position);
+    }
+
     private void loadPhotos(int page) {
         if (!isOnRefresh) view.showLoading(); //При обновлении при помощи SwipeRefreshLayout ProgressBar не будет показыватсья
         disposable = new DisposableObserver<ArrayList<Photo>>() {
@@ -84,7 +95,7 @@ public class Presenter implements BrowseMVP.Presenter {
             }
         };
 
-        api.getRandomPhotos(page, PER_PAGE)
+        api.getPhotos(page, PER_PAGE, orderBy)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(disposable);

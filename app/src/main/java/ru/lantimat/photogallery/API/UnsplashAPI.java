@@ -1,18 +1,12 @@
 package ru.lantimat.photogallery.API;
 
-import com.google.gson.Gson;
-
 import java.util.ArrayList;
 
 import io.reactivex.Observable;
-import retrofit2.Call;
-import retrofit2.http.Field;
-import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
-import retrofit2.http.POST;
-import retrofit2.http.Path;
 import retrofit2.http.Query;
-import ru.lantimat.photogallery.models.Photo;
+import ru.lantimat.photogallery.collectionModel.Collection;
+import ru.lantimat.photogallery.photosModel.Photo;
 
 /**
  * Created by GabdrakhmanovII on 08.12.2017.
@@ -21,9 +15,15 @@ import ru.lantimat.photogallery.models.Photo;
 public interface UnsplashAPI {
 
     @GET("photos")
-    Observable<ArrayList<Photo>> getRandomPhotos(@Query("page") int page,
-                                                 @Query("per_page") int perPage);
+    Observable<ArrayList<Photo>> getPhotos(@Query("page") int page,
+                                                 @Query("per_page") int perPage,
+                                                 @Query("order_by") String orderBy);
 
+
+    @GET("collections")
+    Observable<ArrayList<Collection>> getCollections(@Query("page") int page,
+                                                     @Query("per_page") int perPage,
+                                                     @Query("order_by") String orderBy);
     /*@GET("objects/{Id}/packets")
     Observable<ArrayList<TrackR>> getTrack(@Path("Id") String customerId,
                                            @Query("begin") long begin,
