@@ -18,6 +18,7 @@ import java.util.List;
 
 import ru.lantimat.photogallery.MainActivity;
 import ru.lantimat.photogallery.R;
+import ru.lantimat.photogallery.browse.collections.CategoryListFragment;
 import ru.lantimat.photogallery.browse.photos.ImagesListFragment;
 import ru.lantimat.photogallery.browse.photos.ImagesRecyclerAdapter;
 import ru.lantimat.photogallery.browse.photos.PhotosMVP;
@@ -32,6 +33,7 @@ public class PhotosFragment extends Fragment {
 
     final static String TAG = "PhotosFragment";
     public ViewPagerAdapter adapter;
+    private ViewPager viewPager;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,34 +45,49 @@ public class PhotosFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.photos_browse_fragment, null);
 
-        ViewPager viewPager = (ViewPager) v.findViewById(R.id.pager);
+        viewPager = (ViewPager) v.findViewById(R.id.pager);
+        viewPager.setOffscreenPageLimit(4);
         adapter = new ViewPagerAdapter(getChildFragmentManager());
-        // Add Fragments to adapter one by one
+        addFragmentsToAdapter();
+        viewPager.setAdapter(adapter);
+
+        TabLayout tabLayout = v.findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
+        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+
+        return v;
+    }
+
+    private void addFragmentsToAdapter() {
+        // Добавляем фрагменты в Adapter
         Bundle bundle;
         bundle = new Bundle();
         bundle.putString("orderBy", Presenter.SORT_LATEST);
+        CategoryListFragment fragment0 = new CategoryListFragment();
+        fragment0.setArguments(bundle);
+        adapter.addFragment(fragment0, "Категории");
+
+
+        bundle = new Bundle();
+        bundle.putString(Presenter.ORDER_BY, Presenter.SORT_LATEST);
+        bundle.putInt(ImagesListFragment.REQUEST_CODE, 1);
         ImagesListFragment fragment = new ImagesListFragment();
         fragment.setArguments(bundle);
         adapter.addFragment(fragment, "Последние");
 
         bundle = new Bundle();
-        bundle.putString("orderBy", Presenter.SORT_POPULAR);
+        bundle.putString(Presenter.ORDER_BY, Presenter.SORT_POPULAR);
+        bundle.putInt(ImagesListFragment.REQUEST_CODE, 2);
         ImagesListFragment fragment1 = new ImagesListFragment();
         fragment1.setArguments(bundle);
         adapter.addFragment(fragment1, "Популярные");
 
         bundle = new Bundle();
-        bundle.putString("orderBy", Presenter.SORT_OLDEST);
+        bundle.putString(Presenter.ORDER_BY, Presenter.SORT_OLDEST);
+        bundle.putInt(ImagesListFragment.REQUEST_CODE, 3);
         ImagesListFragment fragment2 = new ImagesListFragment();
         fragment2.setArguments(bundle);
         adapter.addFragment(fragment2, "Старейшие");
-
-        viewPager.setAdapter(adapter);
-
-        TabLayout tabLayout = v.findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
-
-        return v;
     }
 
     private void initToolbar() {

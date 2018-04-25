@@ -6,7 +6,10 @@ package ru.lantimat.photogallery.browse.fullScreenImage;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
+import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -19,6 +22,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.github.chrisbanes.photoview.OnScaleChangedListener;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.github.chuross.flinglayout.FlingLayout;
@@ -31,27 +38,32 @@ import kotlin.jvm.functions.Function0;
 import kotlin.jvm.functions.Function3;
 import ru.lantimat.photogallery.R;
 import ru.lantimat.photogallery.photosModel.Photo;
+import ru.lantimat.photogallery.photosModel.Urls;
 import ru.lantimat.photogallery.utils.GlideApp;
 
 
 public class FullscreenImageAdapter extends PagerAdapter {
 
-    public static int fullScreenImagePosition;
-
-    private Context context;
-    private ArrayList<Photo> ar;
-    //private ImagesArrayList _imagesArrayList;
-    private LayoutInflater inflater;
-    ProgressBar progressBar;
-    TextView textView;
-    Context ctx;
     final String TAG = "FullScreenImageAdapter";
 
-    // constructor
-    public FullscreenImageAdapter(Context context, ArrayList<Photo> ar) {
+    public static int fullScreenImagePosition;
+    private Context context;
+    private ArrayList<Urls> ar;
+    private LayoutInflater inflater;
+    private ProgressBar progressBar;
+    private TextView textView;
+    private Context ctx;
+    private int transitionName;
+
+    public FullscreenImageAdapter(Context context, ArrayList<Urls> ar) {
         this.context = context;
         this.ar = ar;
+    }
 
+    public FullscreenImageAdapter(Context context, ArrayList<Urls> ar, int transitionName) {
+        this.context = context;
+        this.ar = ar;
+        this.transitionName = transitionName;
     }
 
     @Override
@@ -65,7 +77,7 @@ public class FullscreenImageAdapter extends PagerAdapter {
     }
 
     @Override
-    public Object instantiateItem(ViewGroup container, int position) {
+    public Object instantiateItem(ViewGroup container, final int position) {
         PhotoView imgDisplay;
         Button btnClose;
 
@@ -81,8 +93,8 @@ public class FullscreenImageAdapter extends PagerAdapter {
         flingLayout.setDismissListener(new Function0<Unit>() {
             @Override
             public Unit invoke() {
-                Toast.makeText(context, "dismiss!!", Toast.LENGTH_LONG).show();
-                //((PhotoGalleryActivity) context).onBackPressed();
+                //Toast.makeText(context, "dismiss!!", Toast.LENGTH_LONG).show();
+                ((FullScreenImageActivity) context).onBackPressed();
                 return Unit.INSTANCE;
             }
         });
@@ -105,18 +117,44 @@ public class FullscreenImageAdapter extends PagerAdapter {
 
         textView = viewLayout.findViewById(R.id.textView);
         progressBar = viewLayout.findViewById(R.id.progressBar);
-        progressBar.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.INVISIBLE);
         //textView.setText(position + "/" + ar.size());
 
-        Uri uri = Uri.parse(ar.get(position).getUrls().getThumb());
-       GlideApp.with(context)
+        Uri uri = Uri.parse(ar.get(position).getThumb());
+        /*GlideApp.with(context)
                 .load(uri)
+                .into(imgDisplay);*/
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            imgDisplay.setTransitionName("transition" + position);
+        }
+
+        GlideApp
+                .with(context)
+                .load(uri)
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            //if(position==transitionName)
+                            //((FullScreenImageActivity) context).startPostponedEnterTransition();
+                        }
+                        return false;
+                    }
+                })
                 .into(imgDisplay);
 
         ((ViewPager) container).addView(viewLayout);
 
         return viewLayout;
     }
+
+
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {

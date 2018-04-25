@@ -21,7 +21,7 @@ import ru.lantimat.photogallery.utils.NonSwipeableViewPager;
 public class MainActivity extends AppCompatActivity {
 
     static final String TAG = "MainActivity";
-    static final int PAGE_COUNT = 2;
+    static final int PAGE_COUNT = 1;
 
     private NonSwipeableViewPager pager;
     private PagerAdapter pagerAdapter;
@@ -110,9 +110,9 @@ public class MainActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return new CollectionFragment();
-                case 1:
                     return new PhotosFragment();
+                case 1:
+                    return new CollectionFragment();
             }
             return null;
         }

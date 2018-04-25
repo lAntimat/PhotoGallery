@@ -14,6 +14,9 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import ru.alexbykov.nopaginate.callback.OnLoadMoreListener;
+import ru.alexbykov.nopaginate.paginate.Paginate;
+import ru.alexbykov.nopaginate.paginate.PaginateBuilder;
 import ru.lantimat.photogallery.R;
 import ru.lantimat.photogallery.collectionModel.Collection;
 import ru.lantimat.photogallery.utils.ItemClickSupport;
@@ -31,6 +34,7 @@ public class CategoryListFragment extends Fragment implements CollectionMVP.View
     private ArrayList<Collection> ar = new ArrayList<>();
     private CollectionMVP.Presenter presenter;
     private ProgressBar progressBar;
+    private Paginate paginate;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,6 +47,7 @@ public class CategoryListFragment extends Fragment implements CollectionMVP.View
 
         View v = inflater.inflate(R.layout.images_list_fragment, null);
         progressBar = v.findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.INVISIBLE);
         initRecyclerView(v);
 
         String orderBy = getArguments().get("orderBy").toString();
@@ -75,8 +80,9 @@ public class CategoryListFragment extends Fragment implements CollectionMVP.View
             }
         });
 
+        //На всякий случай, пока что перешел на библиотеку
         //Загрузка следующей страницы
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        /*recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
@@ -90,10 +96,21 @@ public class CategoryListFragment extends Fragment implements CollectionMVP.View
                 //Если position первого видимого item и количества видимых элементов при сложении дают число больше,
                 // чем общее количество item, то значит мы в конце списка. Поэтому грузим следующую страницу
                 if ((firstVisible + visibleCount + 1) >= itemCount) {
-                    presenter.loadMore();
                 }
             }
-        });
+        });*/
+
+        paginate = new PaginateBuilder()
+                .with(recyclerView)
+                .setOnLoadMoreListener(new OnLoadMoreListener() {
+                    @Override
+                    public void onLoadMore() {
+                        //http or db request here
+                        presenter.loadMore();
+                        paginate.showLoading(true);
+                    }
+                })
+                .build();
     }
 
     @Override
@@ -103,17 +120,19 @@ public class CategoryListFragment extends Fragment implements CollectionMVP.View
 
     @Override
     public void showLoading() {
-        progressBar.setVisibility(View.VISIBLE);
+        //progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideLoading() {
-        progressBar.setVisibility(View.INVISIBLE);
+        //progressBar.setVisibility(View.INVISIBLE);
+        paginate.showLoading(false);
     }
 
     @Override
     public void showError(String error) {
         Toast.makeText(getContext(), error, Toast.LENGTH_LONG).show();
+        paginate.showError(true);
     }
 
     @Override
@@ -121,5 +140,11 @@ public class CategoryListFragment extends Fragment implements CollectionMVP.View
         this.ar.clear();
         this.ar.addAll(ar);
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onDestroy() {
+        paginate.unbind(); //Don't forget call it on onDestroy();
+        super.onDestroy();
     }
 }

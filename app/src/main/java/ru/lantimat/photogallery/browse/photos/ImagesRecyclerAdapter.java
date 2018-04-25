@@ -3,6 +3,8 @@ package ru.lantimat.photogallery.browse.photos;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,7 @@ import java.util.ArrayList;
 
 import ru.lantimat.photogallery.R;
 import ru.lantimat.photogallery.photosModel.Photo;
+import ru.lantimat.photogallery.photosModel.Urls;
 import ru.lantimat.photogallery.utils.GlideApp;
 import ru.lantimat.photogallery.utils.SquareImageView;
 
@@ -21,11 +24,11 @@ import ru.lantimat.photogallery.utils.SquareImageView;
 
 public class ImagesRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private ArrayList<Photo> mList;
+    private ArrayList<Urls> mList;
     private Context context;
 
 
-    public ImagesRecyclerAdapter(Context context, ArrayList<Photo> itemList) {
+    public ImagesRecyclerAdapter(Context context, ArrayList<Urls> itemList) {
         this.context = context;
         this.mList = itemList;
     }
@@ -40,9 +43,17 @@ public class ImagesRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // the view being shared
+            ViewCompat.setTransitionName(((ViewHolder)holder).imageView, "transition" + position);
+        }
+
+
+
         GlideApp
                 .with(context)
-                .load(mList.get(position).getUrls().getThumb())
+                .load(mList.get(position).getThumb())
                 .centerCrop()
                 .override(200,200)
                 .placeholder(new ColorDrawable(Color.GRAY))

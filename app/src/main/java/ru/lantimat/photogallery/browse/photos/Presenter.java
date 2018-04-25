@@ -1,18 +1,30 @@
 package ru.lantimat.photogallery.browse.photos;
 
+import android.content.Context;
+import android.content.Intent;
+import android.support.v4.view.ViewCompat;
+import android.util.Log;
+import android.widget.ImageView;
+
 import java.util.ArrayList;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
+import retrofit2.http.Url;
 import ru.lantimat.photogallery.API.ApiUtils;
 import ru.lantimat.photogallery.API.UnsplashAPI;
+import ru.lantimat.photogallery.browse.fullScreenImage.FullScreenImageActivity;
 import ru.lantimat.photogallery.browse.photos.PhotosMVP;
 import ru.lantimat.photogallery.photosModel.Photo;
+import ru.lantimat.photogallery.photosModel.Urls;
+
+import static ru.lantimat.photogallery.browse.fullScreenImage.FullScreenImageActivity.EXTRA_ANIMAL_IMAGE_TRANSITION_NAME;
 
 public class Presenter implements PhotosMVP.Presenter {
 
     //Виды сортировки фотографий
+    public static String ORDER_BY = "orderBy";
     public static String SORT_LATEST = "latest"; //Новейшие
     public static String SORT_OLDEST = "oldest"; //Старейшие
     public static String SORT_POPULAR = "popular"; //Популярные
@@ -26,10 +38,18 @@ public class Presenter implements PhotosMVP.Presenter {
     private boolean isLoading = false;
     private static boolean isOnRefresh = false;
     private ArrayList<Photo> ar = new ArrayList<>();
+    private ArrayList<Urls> arUrls = new ArrayList<>();
 
     public Presenter(String orderBy) {
         this.orderBy = orderBy;
         api = ApiUtils.getUnsplashAPI();
+    }
+
+    public Presenter(String orderBy, ArrayList<Urls> ar, int page) {
+        this.orderBy = orderBy;
+        api = ApiUtils.getUnsplashAPI();
+        this.arUrls.addAll(ar);
+        this.page = page;
     }
 
     @Override
@@ -51,9 +71,10 @@ public class Presenter implements PhotosMVP.Presenter {
 
     @Override
     public void loadMore() {
-        if(!isLoading) {
+        if (!isLoading) {
             isLoading = true;
             page++;
+            Log.d("page", "page=" + page);
             loadPhotos(page);
         }
     }
@@ -67,12 +88,35 @@ public class Presenter implements PhotosMVP.Presenter {
     }
 
     @Override
-    public void itemClick(int position) {
-        view.onItemClick(position);
+    public void setPage(int page) {
+        this.page = page;
+    }
+
+    @Override
+    public void itemClick(Context context, int position, ImageView imageView) {
+        Intent intent = new Intent(context, FullScreenImageActivity.class);
+        intent.putExtra(FullScreenImageActivity.ARG_PARAM1 ,arUrls);
+        intent.putExtra(FullScreenImageActivity.ARG_PARAM2, position);
+        intent.putExtra(FullScreenImageActivity.ARG_PARAM3, page);
+        intent.putExtra(FullScreenImageActivity.ARG_PARAM4, orderBy);
+        intent.putExtra(EXTRA_ANIMAL_IMAGE_TRANSITION_NAME, ViewCompat.getTransitionName(imageView));
+
+        view.onItemClick(intent, imageView);
+    }
+
+    @Override
+    public void backPressed(Context context, int position) {
+        Intent intent = new Intent();
+        intent.putExtra(FullScreenImageActivity.ARG_PARAM1 ,arUrls);
+        intent.putExtra(FullScreenImageActivity.ARG_PARAM2, position);
+        intent.putExtra(FullScreenImageActivity.ARG_PARAM3, page);
+        intent.putExtra(FullScreenImageActivity.ARG_PARAM4, orderBy);
+        view.onBackPressed(intent);
     }
 
     private void loadPhotos(int page) {
-        if (!isOnRefresh) view.showLoading(); //При обновлении при помощи SwipeRefreshLayout ProgressBar не будет показыватсья
+        if (!isOnRefresh)
+            view.showLoading(); //При обновлении при помощи SwipeRefreshLayout ProgressBar не будет показыватсья
         disposable = new DisposableObserver<ArrayList<Photo>>() {
             @Override
             public void onNext(ArrayList<Photo> photos) {
@@ -80,7 +124,12 @@ public class Presenter implements PhotosMVP.Presenter {
                 isOnRefresh = false;
                 ar.addAll(photos);
                 view.hideLoading();
-                view.showPhotos(ar);
+
+                //массив содержащий только url
+                //arUrls.clear();
+                arUrls.addAll(makeUrlsArrayList(photos));
+                view.showPhotos(arUrls);
+
             }
 
             @Override
@@ -101,5 +150,11 @@ public class Presenter implements PhotosMVP.Presenter {
                 .subscribeWith(disposable);
     }
 
-
+    private ArrayList<Urls> makeUrlsArrayList(ArrayList<Photo> ar) {
+        ArrayList<Urls> arUrlTemp = new ArrayList<>();
+        for (int i = 0; i < ar.size(); i++) {
+            arUrlTemp.add(ar.get(i).getUrls());
+        }
+        return arUrlTemp;
+    }
 }
