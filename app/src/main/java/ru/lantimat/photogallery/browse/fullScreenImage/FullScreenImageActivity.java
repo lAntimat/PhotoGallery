@@ -66,10 +66,12 @@ public class FullScreenImageActivity extends AppCompatActivity implements Photos
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
 
+        //SharedElement transition
+        //Не получилось пока что реализовать, оставил на будущее, потому что в RecyclerView картинка квадратная, а в полноэкранном режиме
+        //она показывается в исходных пропорциях и происходит не очень красивая анимация
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            String imageTransitionName = getIntent().getStringExtra(EXTRA_ANIMAL_IMAGE_TRANSITION_NAME);
-            //imageView.setTransitionName(imageTransitionName);
             adapter = new FullscreenImageAdapter(this, ar, viewPagerPosition);
+            //sharedElementTransition();
         } else {
             adapter = new FullscreenImageAdapter(this, ar);
         }
@@ -80,7 +82,9 @@ public class FullScreenImageActivity extends AppCompatActivity implements Photos
             presenter = new Presenter(orderBy, ar, page);
             presenter.attachView(this);
         }
+    }
 
+    private void sharedElementTransition() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             String imageTransitionName = getIntent().getStringExtra(EXTRA_ANIMAL_IMAGE_TRANSITION_NAME);
             imageView.setTransitionName(imageTransitionName);
@@ -134,16 +138,8 @@ public class FullScreenImageActivity extends AppCompatActivity implements Photos
         }
     }
 
-    @Override
-    public void onEnterAnimationComplete() {
-        super.onEnterAnimationComplete();
-
-
-    }
-
     private void initViewPager() {
         viewPager = findViewById(R.id.viewPager);
-        viewPager.setVisibility(View.INVISIBLE);
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(viewPagerPosition);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -185,6 +181,8 @@ public class FullScreenImageActivity extends AppCompatActivity implements Photos
     public void onBackPressed(Intent intent) {
         setResult(RESULT_OK, intent);
         finish();
+        overridePendingTransition(0, 0);
+
     }
 
     @Override

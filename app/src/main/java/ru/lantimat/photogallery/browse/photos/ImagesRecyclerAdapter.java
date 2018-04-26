@@ -44,10 +44,13 @@ public class ImagesRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        //SharedElement transition
+        //Не получилось пока что реализовать, оставил на будущее, потому что в RecyclerView картинка квадратная, а в полноэкранном режиме
+        //она показывается в исходных пропорциях и происходит не очень красивая анимация
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             // the view being shared
             ViewCompat.setTransitionName(((ViewHolder)holder).imageView, "transition" + position);
-        }
+        }*/
 
 
 

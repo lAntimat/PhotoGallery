@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import io.reactivex.Observable;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 import ru.lantimat.photogallery.collectionModel.Collection;
 import ru.lantimat.photogallery.photosModel.Photo;
@@ -23,10 +24,10 @@ public interface UnsplashAPI {
     @GET("collections")
     Observable<ArrayList<Collection>> getCollections(@Query("page") int page,
                                                      @Query("per_page") int perPage,
-                                                     @Query("order_by") String orderBy);
-    /*@GET("objects/{Id}/packets")
-    Observable<ArrayList<TrackR>> getTrack(@Path("Id") String customerId,
-                                           @Query("begin") long begin,
-                                           @Query("end") long end);*/
+                                                   @Query("order_by") String orderBy);
+    @GET("collections/{Id}/photos")
+    Observable<ArrayList<Photo>> getCollectionPhotos(@Path("Id") String collectionId,
+                                                     @Query("page") int page,
+                                                     @Query("per_page") int perPage);
 
 }

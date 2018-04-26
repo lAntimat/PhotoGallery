@@ -11,11 +11,9 @@ import java.util.ArrayList;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
-import retrofit2.http.Url;
 import ru.lantimat.photogallery.API.ApiUtils;
 import ru.lantimat.photogallery.API.UnsplashAPI;
 import ru.lantimat.photogallery.browse.fullScreenImage.FullScreenImageActivity;
-import ru.lantimat.photogallery.browse.photos.PhotosMVP;
 import ru.lantimat.photogallery.photosModel.Photo;
 import ru.lantimat.photogallery.photosModel.Urls;
 
@@ -28,7 +26,8 @@ public class Presenter implements PhotosMVP.Presenter {
     public static String SORT_LATEST = "latest"; //Новейшие
     public static String SORT_OLDEST = "oldest"; //Старейшие
     public static String SORT_POPULAR = "popular"; //Популярные
-    private String orderBy = SORT_LATEST; //По умолчанию latest
+    private String orderBy = "";
+    private String id;
 
     private static int PER_PAGE = 50; //Количество Items за один запрос
     private PhotosMVP.View view;
@@ -39,15 +38,23 @@ public class Presenter implements PhotosMVP.Presenter {
     private static boolean isOnRefresh = false;
     private ArrayList<Photo> ar = new ArrayList<>();
     private ArrayList<Urls> arUrls = new ArrayList<>();
+    private boolean isLoadById = false;
 
     public Presenter(String orderBy) {
-        this.orderBy = orderBy;
         api = ApiUtils.getUnsplashAPI();
+        this.orderBy = orderBy;
+        isLoadById = false;
+    }
+
+    public Presenter(String id, boolean isLoadById) {
+        api = ApiUtils.getUnsplashAPI();
+        this.id = id;
+        this.isLoadById = isLoadById;
     }
 
     public Presenter(String orderBy, ArrayList<Urls> ar, int page) {
-        this.orderBy = orderBy;
         api = ApiUtils.getUnsplashAPI();
+        this.orderBy = orderBy;
         this.arUrls.addAll(ar);
         this.page = page;
     }
@@ -129,6 +136,7 @@ public class Presenter implements PhotosMVP.Presenter {
                 //arUrls.clear();
                 arUrls.addAll(makeUrlsArrayList(photos));
                 view.showPhotos(arUrls);
+                if(ar.get(0).get)
 
             }
 
@@ -144,10 +152,17 @@ public class Presenter implements PhotosMVP.Presenter {
             }
         };
 
-        api.getPhotos(page, PER_PAGE, orderBy)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(disposable);
+        if(isLoadById) {
+            api.getCollectionPhotos(id, page, PER_PAGE)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeWith(disposable);
+        } else {
+            api.getPhotos(page, PER_PAGE, orderBy)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeWith(disposable);
+        }
     }
 
     private ArrayList<Urls> makeUrlsArrayList(ArrayList<Photo> ar) {

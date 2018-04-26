@@ -1,8 +1,10 @@
 package ru.lantimat.photogallery.browse.collections;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +20,7 @@ import ru.alexbykov.nopaginate.callback.OnLoadMoreListener;
 import ru.alexbykov.nopaginate.paginate.Paginate;
 import ru.alexbykov.nopaginate.paginate.PaginateBuilder;
 import ru.lantimat.photogallery.R;
+import ru.lantimat.photogallery.browse.photos.ImagesListFragment;
 import ru.lantimat.photogallery.collectionModel.Collection;
 import ru.lantimat.photogallery.utils.ItemClickSupport;
 
@@ -76,7 +79,7 @@ public class CategoryListFragment extends Fragment implements CollectionMVP.View
         ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-
+                presenter.itemClick(getContext(), position);
             }
         });
 
@@ -140,6 +143,11 @@ public class CategoryListFragment extends Fragment implements CollectionMVP.View
         this.ar.clear();
         this.ar.addAll(ar);
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void showCategoryImagesList(Intent intent) {
+        startActivity(intent);
     }
 
     @Override

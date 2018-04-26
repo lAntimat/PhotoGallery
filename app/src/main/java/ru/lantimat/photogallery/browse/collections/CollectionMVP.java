@@ -1,5 +1,9 @@
 package ru.lantimat.photogallery.browse.collections;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+
 import java.util.ArrayList;
 
 import ru.lantimat.photogallery.collectionModel.Collection;
@@ -13,9 +17,11 @@ public interface CollectionMVP {
         void getCollections();
         void loadMore();
         void onRefresh();
+        void itemClick(Context context, int position);
     }
 
     interface View extends BaseView {
         void showCollections(ArrayList<Collection> ar);
+        void showCategoryImagesList(Intent intent);
     }
 }

@@ -28,5 +28,6 @@ public interface PhotosMVP {
         void showPhotos(ArrayList<Urls> ar);
         void onItemClick(Intent intent, ImageView imageView);
         void onBackPressed(Intent intent);
+        void noMoreItems();
     }
 }

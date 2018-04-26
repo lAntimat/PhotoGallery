@@ -13,12 +13,15 @@ import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -42,6 +45,8 @@ import static ru.lantimat.photogallery.browse.fullScreenImage.FullScreenImageAct
 public class ImagesListFragment extends Fragment implements PhotosMVP.View {
 
     final static String TAG = "ImagesListFragment";
+    public static String ID = "id";
+
     public static String REQUEST_CODE = "requestCode";
     private int mRequestCode;
 
@@ -67,9 +72,15 @@ public class ImagesListFragment extends Fragment implements PhotosMVP.View {
 
         mRequestCode = getArguments().getInt(REQUEST_CODE, -1);
 
-        String orderBy = getArguments().get("orderBy").toString();
-        if(orderBy!=null) {
+        String orderBy = getArguments().getString("orderBy", "");
+        String id = getArguments().getString(ID, "");
+
+        if(!TextUtils.isEmpty(orderBy)) { //Если используем фрагмент для просмотра списка фотографий
             presenter = new Presenter(orderBy);
+            presenter.attachView(this);
+            presenter.getPhotos();
+        } else if(!TextUtils.isEmpty(id)) { //Если используем фрагмент для просмотра списка фотографий из коллекции
+            presenter = new Presenter(id, true);
             presenter.attachView(this);
             presenter.getPhotos();
         }
@@ -140,6 +151,8 @@ public class ImagesListFragment extends Fragment implements PhotosMVP.View {
 
     @Override
     public void showPhotos(ArrayList<Urls> ar) {
+        //stopScroll, для того, чтобы после loadMore прокрутка не продолжилась
+        //recyclerView.stopScroll();
         this.ar.clear();
         this.ar.addAll(ar);
         adapter.notifyDataSetChanged();
@@ -148,17 +161,25 @@ public class ImagesListFragment extends Fragment implements PhotosMVP.View {
     @Override
     public void onItemClick(Intent intent, ImageView sharedImageView) {
 
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+        //Кусочек кода для SharedElement transition
+       /* ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                 getActivity(),
                 sharedImageView,
                 ViewCompat.getTransitionName(sharedImageView));
+        startActivityForResult(intent, mRequestCode, options.toBundle());*/
 
-        startActivityForResult(intent, mRequestCode, options.toBundle());
+        startActivityForResult(intent, mRequestCode);
+        getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
     @Override
     public void onBackPressed(Intent intent) {
 
+    }
+
+    @Override
+    public void noMoreItems() {
+        paginate.setNoMoreItems(true);
     }
 
     @Override

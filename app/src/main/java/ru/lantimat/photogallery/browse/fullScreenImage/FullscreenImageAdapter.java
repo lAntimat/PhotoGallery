@@ -141,8 +141,8 @@ public class FullscreenImageAdapter extends PagerAdapter {
                     @Override
                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            //if(position==transitionName)
-                            //((FullScreenImageActivity) context).startPostponedEnterTransition();
+                            if(position==transitionName)
+                            ((FullScreenImageActivity) context).startPostponedEnterTransition();
                         }
                         return false;
                     }

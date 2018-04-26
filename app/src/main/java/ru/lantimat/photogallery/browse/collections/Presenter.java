@@ -1,5 +1,8 @@
 package ru.lantimat.photogallery.browse.collections;
 
+import android.content.Context;
+import android.content.Intent;
+
 import java.util.ArrayList;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -7,9 +10,9 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import ru.lantimat.photogallery.API.ApiUtils;
 import ru.lantimat.photogallery.API.UnsplashAPI;
-import ru.lantimat.photogallery.browse.photos.PhotosMVP;
+import ru.lantimat.photogallery.browse.photos.CategoryImagesListActivity;
+import ru.lantimat.photogallery.browse.photos.ImagesListFragment;
 import ru.lantimat.photogallery.collectionModel.Collection;
-import ru.lantimat.photogallery.photosModel.Photo;
 
 public class Presenter implements CollectionMVP.Presenter {
 
@@ -65,6 +68,13 @@ public class Presenter implements CollectionMVP.Presenter {
         page = 1;
         isOnRefresh = true;
         loadCollections(page);
+    }
+
+    @Override
+    public void itemClick(Context context, int position) {
+        Intent intent = new Intent(context, CategoryImagesListActivity.class);
+        intent.putExtra(ImagesListFragment.ID, ar.get(position).getId().toString());
+        view.showCategoryImagesList(intent);
     }
 
     private void loadCollections(int page) {
