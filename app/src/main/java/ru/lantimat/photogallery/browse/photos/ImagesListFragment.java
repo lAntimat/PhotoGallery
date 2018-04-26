@@ -152,7 +152,7 @@ public class ImagesListFragment extends Fragment implements PhotosMVP.View {
     @Override
     public void showPhotos(ArrayList<Urls> ar) {
         //stopScroll, для того, чтобы после loadMore прокрутка не продолжилась
-        //recyclerView.stopScroll();
+        recyclerView.stopScroll();
         this.ar.clear();
         this.ar.addAll(ar);
         adapter.notifyDataSetChanged();

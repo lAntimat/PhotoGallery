@@ -186,6 +186,11 @@ public class FullScreenImageActivity extends AppCompatActivity implements Photos
     }
 
     @Override
+    public void noMoreItems() {
+
+    }
+
+    @Override
     public void showLoading() {
 
     }

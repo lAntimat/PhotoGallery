@@ -21,10 +21,9 @@ public interface UnsplashAPI {
                                                  @Query("order_by") String orderBy);
 
 
-    @GET("collections")
+    @GET("collections/featured")
     Observable<ArrayList<Collection>> getCollections(@Query("page") int page,
-                                                     @Query("per_page") int perPage,
-                                                   @Query("order_by") String orderBy);
+                                                     @Query("per_page") int perPage);
     @GET("collections/{Id}/photos")
     Observable<ArrayList<Photo>> getCollectionPhotos(@Path("Id") String collectionId,
                                                      @Query("page") int page,

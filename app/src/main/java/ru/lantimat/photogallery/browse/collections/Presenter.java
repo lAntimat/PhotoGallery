@@ -101,7 +101,7 @@ public class Presenter implements CollectionMVP.Presenter {
             }
         };
 
-        api.getCollections(page, PER_PAGE, orderBy)
+        api.getCollections(page, PER_PAGE)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(disposable);

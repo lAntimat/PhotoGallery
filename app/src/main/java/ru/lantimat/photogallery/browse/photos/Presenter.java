@@ -136,7 +136,7 @@ public class Presenter implements PhotosMVP.Presenter {
                 //arUrls.clear();
                 arUrls.addAll(makeUrlsArrayList(photos));
                 view.showPhotos(arUrls);
-                if(ar.get(0).get)
+                if(photos.size()==0) view.noMoreItems();
 
             }
 
