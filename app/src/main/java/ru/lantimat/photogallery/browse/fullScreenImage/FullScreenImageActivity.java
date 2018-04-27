@@ -154,6 +154,8 @@ public class FullScreenImageActivity extends AppCompatActivity implements Photos
                 textView.setText(position + 1 + "/" + viewPager.getAdapter().getCount());
                 if(position + 3 == viewPager.getAdapter().getCount())
                     presenter.loadMore();
+
+                adapter.notifyDataSetChanged();
             }
 
             @Override

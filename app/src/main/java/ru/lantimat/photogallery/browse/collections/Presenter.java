@@ -106,6 +106,7 @@ public class Presenter implements CollectionMVP.Presenter {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(disposable);
+
     }
 
 

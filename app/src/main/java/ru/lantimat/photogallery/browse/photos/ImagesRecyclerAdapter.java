@@ -59,7 +59,7 @@ public class ImagesRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 .load(mList.get(position).getThumb())
                 .centerCrop()
                 .override(200,200)
-                .placeholder(new ColorDrawable(Color.GRAY))
+                //.placeholder(new ColorDrawable(Color.GRAY))
                 .into(((ViewHolder) holder).imageView);
 
 

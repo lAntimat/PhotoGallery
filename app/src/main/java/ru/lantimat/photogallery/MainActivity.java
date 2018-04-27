@@ -4,7 +4,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -13,9 +12,7 @@ import android.support.v7.widget.Toolbar;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 
-import ru.lantimat.photogallery.browse.CollectionFragment;
-import ru.lantimat.photogallery.browse.collections.CategoryListFragment;
-import ru.lantimat.photogallery.browse.PhotosFragment;
+import ru.lantimat.photogallery.browse.BrowseFragment;
 import ru.lantimat.photogallery.utils.NonSwipeableViewPager;
 
 public class MainActivity extends AppCompatActivity {
@@ -97,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
         pager = findViewById(R.id.viewPager);
         pagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
         pager.setAdapter(pagerAdapter);
-        pager.setOffscreenPageLimit(2);
+        pager.setOffscreenPageLimit(1);
     }
 
     private class MyFragmentPagerAdapter extends FragmentPagerAdapter {
@@ -110,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return new PhotosFragment();
+                    return new BrowseFragment();
             }
             return null;
         }

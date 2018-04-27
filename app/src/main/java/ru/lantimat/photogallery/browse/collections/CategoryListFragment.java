@@ -71,7 +71,7 @@ public class CategoryListFragment extends Fragment implements CollectionMVP.View
     private void initRecyclerView(View v) {
 
         recyclerView = v.findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3, LinearLayoutManager.VERTICAL, false));
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2, LinearLayoutManager.VERTICAL, false));
         recyclerView.setHasFixedSize(true);
         adapter = new CollectionRecyclerAdapter(getContext(), ar);
         recyclerView.setAdapter(adapter);

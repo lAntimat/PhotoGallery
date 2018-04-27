@@ -52,7 +52,7 @@ public class CollectionRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
                     .load(mList.get(position).getCoverPhoto().getUrls().getThumb())
                     .centerCrop()
                     .override(200, 200)
-                    .placeholder(R.color.colorPlaceholder)
+                    //.placeholder(R.color.colorPlaceholder)
                     .into(((ViewHolder) holder).imageView);
         } catch (NullPointerException e) {
             Log.d(TAG, e.toString());
