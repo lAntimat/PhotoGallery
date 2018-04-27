@@ -33,9 +33,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        //getSupportActionBar().setTitle("MainActivity");
+        getSupportActionBar().setTitle("Обзор");
         //getSupportActionBar().setSubtitle("MainActivity");
-        setupBottomBar();
+        //setupBottomBar();
         initViewPager();
     }
 
@@ -46,8 +46,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         //Создаем айтемы
-        AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.bottom_bar_collection, R.drawable.ic_launcher_foreground, R.color.colorBottomNavigationPrimary);
-        AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.bottom_bar_photo, R.drawable.ic_launcher_foreground, R.color.colorBottomNavigationPrimary);
+        AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.bottom_bar_collection, R.drawable.bg_personal, R.color.colorBottomNavigationPrimary);
+        AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.bottom_bar_photo, R.drawable.bg_personal, R.color.colorBottomNavigationPrimary);
         //AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.tab_3, R.drawable.ic_instagram_white_24dp, R.color.colorBottomNavigationPrimary);
         //AHBottomNavigationItem item4 = new AHBottomNavigationItem(R.string.tab_4, R.drawable.ic_dots_horizontal_white_24dp, R.color.colorBottomNavigationPrimary);
 
@@ -111,8 +111,6 @@ public class MainActivity extends AppCompatActivity {
             switch (position) {
                 case 0:
                     return new PhotosFragment();
-                case 1:
-                    return new CollectionFragment();
             }
             return null;
         }

@@ -2,7 +2,7 @@ package ru.lantimat.photogallery.utils;
 
 public interface BaseView {
 
-    void showLoading();
+    void showLoading(boolean isLoadMore);
 
     void hideLoading();
 

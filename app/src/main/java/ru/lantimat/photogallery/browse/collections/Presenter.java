@@ -51,6 +51,7 @@ public class Presenter implements CollectionMVP.Presenter {
         ar.clear();
         page = 1;
         loadCollections(page);
+        view.showLoading(false);
     }
 
     @Override
@@ -59,6 +60,7 @@ public class Presenter implements CollectionMVP.Presenter {
             isLoading = true;
             page++;
             loadCollections(page);
+            view.showLoading(true);
         }
     }
 
@@ -78,7 +80,6 @@ public class Presenter implements CollectionMVP.Presenter {
     }
 
     private void loadCollections(int page) {
-        if (!isOnRefresh) view.showLoading(); //При обновлении при помощи SwipeRefreshLayout ProgressBar не будет показыватсья
         disposable = new DisposableObserver<ArrayList<Collection>>() {
             @Override
             public void onNext(ArrayList<Collection> collections) {

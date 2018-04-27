@@ -110,10 +110,10 @@ public class CategoryListFragment extends Fragment implements CollectionMVP.View
                     public void onLoadMore() {
                         //http or db request here
                         presenter.loadMore();
-                        paginate.showLoading(true);
                     }
                 })
                 .build();
+        paginate.setNoMoreItems(true);
     }
 
     @Override
@@ -122,13 +122,14 @@ public class CategoryListFragment extends Fragment implements CollectionMVP.View
     }
 
     @Override
-    public void showLoading() {
-        //progressBar.setVisibility(View.VISIBLE);
+    public void showLoading(boolean isLoadMore) {
+        if(isLoadMore) paginate.showLoading(true);
+        else progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideLoading() {
-        //progressBar.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.INVISIBLE);
         paginate.showLoading(false);
     }
 
@@ -140,9 +141,12 @@ public class CategoryListFragment extends Fragment implements CollectionMVP.View
 
     @Override
     public void showCollections(ArrayList<ru.lantimat.photogallery.collectionModel.Collection> ar) {
+        //stopScroll, для того, чтобы после loadMore прокрутка не продолжилась
+        recyclerView.stopScroll();
         this.ar.clear();
         this.ar.addAll(ar);
         adapter.notifyDataSetChanged();
+        paginate.setNoMoreItems(false);
     }
 
     @Override

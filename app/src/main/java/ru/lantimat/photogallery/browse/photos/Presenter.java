@@ -74,6 +74,7 @@ public class Presenter implements PhotosMVP.Presenter {
         ar.clear();
         page = 1;
         loadPhotos(page);
+        view.showLoading(false);
     }
 
     @Override
@@ -83,6 +84,7 @@ public class Presenter implements PhotosMVP.Presenter {
             page++;
             Log.d("page", "page=" + page);
             loadPhotos(page);
+            view.showLoading(true);
         }
     }
 
@@ -122,8 +124,10 @@ public class Presenter implements PhotosMVP.Presenter {
     }
 
     private void loadPhotos(int page) {
-        if (!isOnRefresh)
-            view.showLoading(); //При обновлении при помощи SwipeRefreshLayout ProgressBar не будет показыватсья
+        if (!isOnRefresh) { //При обновлении при помощи SwipeRefreshLayout ProgressBar не будет показыватсья
+            if(page==1) view.showLoading(false);
+            else view.showLoading(true);
+        }
         disposable = new DisposableObserver<ArrayList<Photo>>() {
             @Override
             public void onNext(ArrayList<Photo> photos) {

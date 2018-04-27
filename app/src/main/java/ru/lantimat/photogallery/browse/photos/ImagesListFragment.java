@@ -138,10 +138,11 @@ public class ImagesListFragment extends Fragment implements PhotosMVP.View {
                     public void onLoadMore() {
                         //http or db request here
                         presenter.loadMore();
-                        paginate.showLoading(true);
                     }
                 })
                 .build();
+        paginate.setNoMoreItems(true);
+
     }
 
     @Override
@@ -156,6 +157,8 @@ public class ImagesListFragment extends Fragment implements PhotosMVP.View {
         this.ar.clear();
         this.ar.addAll(ar);
         adapter.notifyDataSetChanged();
+        paginate.setNoMoreItems(false);
+
     }
 
     @Override
@@ -202,13 +205,14 @@ public class ImagesListFragment extends Fragment implements PhotosMVP.View {
     }
 
     @Override
-    public void showLoading() {
-        //progressBar.setVisibility(View.VISIBLE);
+    public void showLoading(boolean isLoadMore) {
+        if(isLoadMore) paginate.showLoading(true);
+        else progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideLoading() {
-        //progressBar.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.INVISIBLE);
         paginate.showLoading(false);
     }
 

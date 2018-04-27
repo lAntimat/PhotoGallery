@@ -191,7 +191,7 @@ public class FullScreenImageActivity extends AppCompatActivity implements Photos
     }
 
     @Override
-    public void showLoading() {
+    public void showLoading(boolean isLoadMore) {
 
     }
 
