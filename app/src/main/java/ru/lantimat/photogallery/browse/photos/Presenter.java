@@ -17,8 +17,6 @@ import ru.lantimat.photogallery.browse.fullScreenImage.FullScreenImageActivity;
 import ru.lantimat.photogallery.photosModel.Photo;
 import ru.lantimat.photogallery.photosModel.Urls;
 
-import static ru.lantimat.photogallery.browse.fullScreenImage.FullScreenImageActivity.EXTRA_ANIMAL_IMAGE_TRANSITION_NAME;
-
 public class Presenter implements PhotosMVP.Presenter {
 
     //Виды сортировки фотографий
@@ -108,7 +106,7 @@ public class Presenter implements PhotosMVP.Presenter {
         intent.putExtra(FullScreenImageActivity.ARG_PARAM2, position);
         intent.putExtra(FullScreenImageActivity.ARG_PARAM3, page);
         intent.putExtra(FullScreenImageActivity.ARG_PARAM4, orderBy);
-        intent.putExtra(EXTRA_ANIMAL_IMAGE_TRANSITION_NAME, ViewCompat.getTransitionName(imageView));
+//        intent.putExtra(EXTRA_ANIMAL_IMAGE_TRANSITION_NAME, ViewCompat.getTransitionName(imageView));
 
         view.onItemClick(intent, imageView);
     }

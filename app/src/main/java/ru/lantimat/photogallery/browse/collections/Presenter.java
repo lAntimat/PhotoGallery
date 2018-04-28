@@ -76,6 +76,7 @@ public class Presenter implements CollectionMVP.Presenter {
     public void itemClick(Context context, int position) {
         Intent intent = new Intent(context, CategoryImagesListActivity.class);
         intent.putExtra(ImagesListFragment.ID, ar.get(position).getId().toString());
+        intent.putExtra(CategoryImagesListActivity.TITLE, ar.get(position).getTitle());
         view.showCategoryImagesList(intent);
     }
 

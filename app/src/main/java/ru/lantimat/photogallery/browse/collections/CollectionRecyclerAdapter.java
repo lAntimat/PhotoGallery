@@ -1,8 +1,7 @@
 package ru.lantimat.photogallery.browse.collections;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,11 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.RequestBuilder;
+
 import java.util.ArrayList;
 
 import ru.lantimat.photogallery.R;
 import ru.lantimat.photogallery.collectionModel.Collection;
-import ru.lantimat.photogallery.photosModel.Photo;
 import ru.lantimat.photogallery.utils.GlideApp;
 import ru.lantimat.photogallery.utils.SquareImageView;
 
@@ -47,11 +47,18 @@ public class CollectionRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
         ((ViewHolder)holder).textView.setText(mList.get(position).getTitle());
 
         try {
-            GlideApp
-                    .with(context)
+
+            RequestBuilder<Drawable> thumbnailRequest = GlideApp.with(context)
                     .load(mList.get(position).getCoverPhoto().getUrls().getThumb())
                     .centerCrop()
-                    .override(200, 200)
+                    .override(200, 200);
+
+            GlideApp
+                    .with(context)
+                    .load(mList.get(position).getCoverPhoto().getUrls().getRegular())
+                    .thumbnail(thumbnailRequest)
+                    .centerCrop()
+                    .override(400, 400)
                     //.placeholder(R.color.colorPlaceholder)
                     .into(((ViewHolder) holder).imageView);
         } catch (NullPointerException e) {

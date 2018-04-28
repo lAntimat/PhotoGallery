@@ -56,6 +56,7 @@ public class ImagesListFragment extends Fragment implements PhotosMVP.View {
     private PhotosMVP.Presenter presenter;
     private ProgressBar progressBar;
     private Paginate paginate;
+    private String orderBy;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,9 +71,9 @@ public class ImagesListFragment extends Fragment implements PhotosMVP.View {
         progressBar.setVisibility(View.INVISIBLE);
         initRecyclerView(v);
 
-        mRequestCode = getArguments().getInt(REQUEST_CODE, -1);
+        mRequestCode = getArguments().getInt(REQUEST_CODE, 10);
 
-        String orderBy = getArguments().getString("orderBy", "");
+        orderBy = getArguments().getString("orderBy", "");
         String id = getArguments().getString(ID, "");
 
         if(!TextUtils.isEmpty(orderBy)) { //Если используем фрагмент для просмотра списка фотографий
@@ -158,7 +159,6 @@ public class ImagesListFragment extends Fragment implements PhotosMVP.View {
         this.ar.addAll(ar);
         adapter.notifyDataSetChanged();
         paginate.setNoMoreItems(false);
-
     }
 
     @Override
@@ -194,7 +194,7 @@ public class ImagesListFragment extends Fragment implements PhotosMVP.View {
             ar.addAll(arTemp);
             int viewPagerPosition = data.getIntExtra(ARG_PARAM2, -1);
             int page = data.getIntExtra(ARG_PARAM3, -1);
-            String orderBy = data.getStringExtra(ARG_PARAM4);
+            //String orderBy = data.getStringExtra(ARG_PARAM4);
 
             presenter = new Presenter(orderBy, ar, page);
             presenter.attachView(this);
