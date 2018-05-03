@@ -116,6 +116,11 @@ public class FullScreenImageActivity extends AppCompatActivity implements Photos
     }
 
     @Override
+    public void onSaveInstance(Bundle bundle) {
+
+    }
+
+    @Override
     public void showLoading(boolean isLoadMore) {
 
     }

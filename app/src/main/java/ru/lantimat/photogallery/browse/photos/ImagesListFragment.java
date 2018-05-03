@@ -3,13 +3,8 @@ package ru.lantimat.photogallery.browse.photos;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.transition.ChangeBounds;
-import android.support.transition.ChangeImageTransform;
-import android.support.transition.ChangeTransform;
-import android.support.transition.TransitionSet;
-import android.support.v4.app.ActivityOptionsCompat;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,8 +16,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
 import ru.alexbykov.nopaginate.callback.OnLoadMoreListener;
@@ -32,6 +25,7 @@ import ru.lantimat.photogallery.R;
 import ru.lantimat.photogallery.browse.fullScreenImage.FullScreenImageActivity;
 import ru.lantimat.photogallery.photosModel.Urls;
 import ru.lantimat.photogallery.utils.ItemClickSupport;
+import ru.lantimat.photogallery.utils.Utils;
 
 import static ru.lantimat.photogallery.browse.fullScreenImage.FullScreenImageActivity.ARG_PARAM1;
 import static ru.lantimat.photogallery.browse.fullScreenImage.FullScreenImageActivity.ARG_PARAM2;
@@ -60,6 +54,8 @@ public class ImagesListFragment extends Fragment implements PhotosMVP.View {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Сохраняем состояние фрагмента после пересоздания активити
+        setRetainInstance(true);
     }
 
     @Override
@@ -76,7 +72,15 @@ public class ImagesListFragment extends Fragment implements PhotosMVP.View {
         orderBy = getArguments().getString("orderBy", "");
         String id = getArguments().getString(ID, "");
 
-        if(!TextUtils.isEmpty(orderBy)) { //Если используем фрагмент для просмотра списка фотографий
+        if (savedInstanceState != null) {
+            ar.addAll(savedInstanceState.getParcelableArrayList(ARG_PARAM1));
+            recyclerView.getLayoutManager().onRestoreInstanceState(savedInstanceState.getParcelable(ARG_PARAM2));
+            int page = savedInstanceState.getInt(ARG_PARAM3, -1);
+            orderBy = savedInstanceState.getString(ARG_PARAM4);
+            presenter = new Presenter(orderBy, ar, page);
+            presenter.attachView(this);
+            initPaginate(true);
+        } else if(!TextUtils.isEmpty(orderBy)) { //Если используем фрагмент для просмотра списка фотографий
             presenter = new Presenter(orderBy);
             presenter.attachView(this);
             presenter.getPhotos();
@@ -90,6 +94,13 @@ public class ImagesListFragment extends Fragment implements PhotosMVP.View {
     }
 
     @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(FullScreenImageActivity.ARG_PARAM2, recyclerView.getLayoutManager().onSaveInstanceState());
+        presenter.saveInstance(outState);
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
     }
@@ -97,7 +108,12 @@ public class ImagesListFragment extends Fragment implements PhotosMVP.View {
     private void initRecyclerView(View v) {
 
         recyclerView = v.findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2, LinearLayoutManager.VERTICAL, false));
+
+
+        if(Utils.isPortraitMode(getActivity())) recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2, LinearLayoutManager.VERTICAL, false));
+        else recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 4, LinearLayoutManager.VERTICAL, false));
+
+
         recyclerView.setHasFixedSize(true);
         adapter = new ImagesRecyclerAdapter(getContext(), ar);
         recyclerView.setAdapter(adapter);
@@ -132,6 +148,11 @@ public class ImagesListFragment extends Fragment implements PhotosMVP.View {
             }
         });*/
 
+        initPaginate(false);
+
+    }
+
+    private void initPaginate(boolean retainState) {
         paginate = new PaginateBuilder()
                 .with(recyclerView)
                 .setOnLoadMoreListener(new OnLoadMoreListener() {
@@ -142,8 +163,7 @@ public class ImagesListFragment extends Fragment implements PhotosMVP.View {
                     }
                 })
                 .build();
-        paginate.setNoMoreItems(true);
-
+        if(!retainState) paginate.setNoMoreItems(true); //Костыль, что анимация загрузки не показывалась, когда recyclerView пустой
     }
 
     @Override
@@ -164,13 +184,6 @@ public class ImagesListFragment extends Fragment implements PhotosMVP.View {
     @Override
     public void onItemClick(Intent intent, ImageView sharedImageView) {
 
-        //Кусочек кода для SharedElement transition
-       /* ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                getActivity(),
-                sharedImageView,
-                ViewCompat.getTransitionName(sharedImageView));
-        startActivityForResult(intent, mRequestCode, options.toBundle());*/
-
         startActivityForResult(intent, mRequestCode);
         getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
@@ -183,6 +196,11 @@ public class ImagesListFragment extends Fragment implements PhotosMVP.View {
     @Override
     public void noMoreItems() {
         paginate.setNoMoreItems(true);
+    }
+
+    @Override
+    public void onSaveInstance(Bundle bundle) {
+        super.onSaveInstanceState(bundle);
     }
 
     @Override
@@ -226,14 +244,5 @@ public class ImagesListFragment extends Fragment implements PhotosMVP.View {
     public void onDestroy() {
         paginate.unbind(); //Don't forget call it on onDestroy();
         super.onDestroy();
-    }
-
-    public class DetailsTransition extends TransitionSet {
-        public DetailsTransition() {
-            setOrdering(ORDERING_TOGETHER);
-            addTransition(new ChangeBounds()).
-                    addTransition(new ChangeTransform()).
-                    addTransition(new ChangeImageTransform());
-        }
     }
 }

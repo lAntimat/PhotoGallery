@@ -24,6 +24,11 @@ import ru.lantimat.photogallery.browse.photos.ImagesListFragment;
 import ru.lantimat.photogallery.collectionModel.Collection;
 import ru.lantimat.photogallery.utils.ItemClickSupport;
 
+import static ru.lantimat.photogallery.browse.fullScreenImage.FullScreenImageActivity.ARG_PARAM1;
+import static ru.lantimat.photogallery.browse.fullScreenImage.FullScreenImageActivity.ARG_PARAM2;
+import static ru.lantimat.photogallery.browse.fullScreenImage.FullScreenImageActivity.ARG_PARAM3;
+import static ru.lantimat.photogallery.browse.fullScreenImage.FullScreenImageActivity.ARG_PARAM4;
+
 /**
  * Created by GabdrakhmanovII on 28.07.2017.
  */
@@ -54,7 +59,16 @@ public class CategoryListFragment extends Fragment implements CollectionMVP.View
         initRecyclerView(v);
 
         String orderBy = getArguments().get("orderBy").toString();
-        if(orderBy!=null) {
+
+        if (savedInstanceState != null) {
+            ar.addAll(savedInstanceState.getParcelableArrayList(ARG_PARAM1));
+            recyclerView.getLayoutManager().onRestoreInstanceState(savedInstanceState.getParcelable(ARG_PARAM2));
+            int page = savedInstanceState.getInt(ARG_PARAM3, -1);
+            orderBy = savedInstanceState.getString(ARG_PARAM4);
+            presenter = new Presenter(orderBy, ar, page);
+            presenter.attachView(this);
+            initPaginate(true);
+        } else if(orderBy!=null) {
             presenter = new Presenter(orderBy);
             presenter.attachView(this);
             presenter.getCollections();
@@ -103,6 +117,10 @@ public class CategoryListFragment extends Fragment implements CollectionMVP.View
             }
         });*/
 
+        initPaginate(false);
+    }
+
+    private void initPaginate(boolean retainState) {
         paginate = new PaginateBuilder()
                 .with(recyclerView)
                 .setOnLoadMoreListener(new OnLoadMoreListener() {
@@ -152,6 +170,11 @@ public class CategoryListFragment extends Fragment implements CollectionMVP.View
     @Override
     public void showCategoryImagesList(Intent intent) {
         startActivity(intent);
+    }
+
+    @Override
+    public void onSaveInstance(Bundle bundle) {
+
     }
 
     @Override

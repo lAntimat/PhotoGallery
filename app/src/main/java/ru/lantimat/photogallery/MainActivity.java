@@ -36,58 +36,6 @@ public class MainActivity extends AppCompatActivity {
         initViewPager();
     }
 
-
-
-    private void setupBottomBar() { //Инициализация нижнего бара
-        AHBottomNavigation bottomNavigation = (AHBottomNavigation) findViewById(R.id.bottom_navigation);
-
-
-        //Создаем айтемы
-        AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.bottom_bar_collection, R.drawable.bg_personal, R.color.colorBottomNavigationPrimary);
-        AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.bottom_bar_photo, R.drawable.bg_personal, R.color.colorBottomNavigationPrimary);
-        //AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.tab_3, R.drawable.ic_instagram_white_24dp, R.color.colorBottomNavigationPrimary);
-        //AHBottomNavigationItem item4 = new AHBottomNavigationItem(R.string.tab_4, R.drawable.ic_dots_horizontal_white_24dp, R.color.colorBottomNavigationPrimary);
-
-        //Добавляем в бар
-        bottomNavigation.addItem(item1);
-        bottomNavigation.addItem(item2);
-        //bottomNavigation.addItem(item3);
-        //bottomNavigation.addItem(item4);
-
-        // Manage titles
-        bottomNavigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
-
-        bottomNavigation.setBehaviorTranslationEnabled(false);
-
-        //bottomNavigation.setAccentColor(ContextCompat.getColor(this, R.color.md_blue_900));
-
-        // Set background color
-        //bottomNavigation.setDefaultBackgroundColor(Color.parseColor("#FEFEFE"));
-
-        // Add or remove notification for each item
-        //bottomNavigation.setNotification("1", 2);
-
-
-
-        // Set listeners
-        bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
-            @Override
-            public boolean onTabSelected(int position, boolean wasSelected) {
-                pager.setCurrentItem(position);
-                return true;
-            }
-        });
-        bottomNavigation.setOnNavigationPositionListener(new AHBottomNavigation.OnNavigationPositionListener() {
-            @Override public void onPositionChange(int y) {
-                // Manage the new y position
-            }
-        });
-
-        //Устанавливаем текущий элемент
-        bottomNavigation.setCurrentItem(0,false);
-
-    }
-
     private void initViewPager() {
 
         //Инициализация ViewPager

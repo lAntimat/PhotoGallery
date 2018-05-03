@@ -37,6 +37,8 @@ public class BrowseFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Сохраняем состояние фрагмента после пересоздания активити
+        setRetainInstance(true);
     }
 
     @Override

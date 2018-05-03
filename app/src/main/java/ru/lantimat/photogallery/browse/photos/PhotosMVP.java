@@ -3,6 +3,8 @@ package ru.lantimat.photogallery.browse.photos;
 import android.content.Context;
 import android.content.Intent;
 import android.media.Image;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
@@ -21,7 +23,7 @@ public interface PhotosMVP {
         void setPage(int page);
         void itemClick(Context context, int position, ImageView view);
         void backPressed(Context context, int position);
-
+        void saveInstance(Bundle bundle);
     }
 
     interface View extends BaseView {
@@ -29,5 +31,6 @@ public interface PhotosMVP {
         void onItemClick(Intent intent, ImageView imageView);
         void onBackPressed(Intent intent);
         void noMoreItems();
+        void onSaveInstance(Bundle bundle);
     }
 }

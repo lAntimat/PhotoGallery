@@ -10,6 +10,9 @@ import ru.lantimat.photogallery.R;
 public class CategoryImagesListActivity extends AppCompatActivity {
 
     public static String TITLE = "title";
+    private final String IMAGE_LIST_FRAGMENT_TAG = "imageListTag";
+
+    private ImagesListFragment fragment;
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -29,6 +32,7 @@ public class CategoryImagesListActivity extends AppCompatActivity {
 
         String title = getIntent().getStringExtra(TITLE);
         getSupportActionBar().setTitle(title);
+
         showFragment();
     }
 
@@ -37,10 +41,10 @@ public class CategoryImagesListActivity extends AppCompatActivity {
         bundle.putString(ImagesListFragment.ID, getIntent().getStringExtra(ImagesListFragment.ID));
         bundle.putInt(ImagesListFragment.REQUEST_CODE, 5);
 
-        ImagesListFragment fragment = new ImagesListFragment();
+        fragment = new ImagesListFragment();
         fragment.setArguments(bundle);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.container, fragment);
+        ft.replace(R.id.container, fragment, IMAGE_LIST_FRAGMENT_TAG);
         ft.commit();
     }
 }

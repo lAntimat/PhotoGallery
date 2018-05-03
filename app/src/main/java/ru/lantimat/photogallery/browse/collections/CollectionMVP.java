@@ -18,10 +18,13 @@ public interface CollectionMVP {
         void loadMore();
         void onRefresh();
         void itemClick(Context context, int position);
+        void saveInstance(Bundle bundle);
+
     }
 
     interface View extends BaseView {
         void showCollections(ArrayList<Collection> ar);
         void showCategoryImagesList(Intent intent);
+        void onSaveInstance(Bundle bundle);
     }
 }

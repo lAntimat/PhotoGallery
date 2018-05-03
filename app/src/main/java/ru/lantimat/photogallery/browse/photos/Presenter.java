@@ -2,6 +2,8 @@ package ru.lantimat.photogallery.browse.photos;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.view.ViewCompat;
 import android.util.Log;
 import android.widget.ImageView;
@@ -119,6 +121,14 @@ public class Presenter implements PhotosMVP.Presenter {
         intent.putExtra(FullScreenImageActivity.ARG_PARAM3, page);
         intent.putExtra(FullScreenImageActivity.ARG_PARAM4, orderBy);
         view.onBackPressed(intent);
+    }
+
+    @Override
+    public void saveInstance(Bundle bundle) {
+        bundle.putParcelableArrayList(FullScreenImageActivity.ARG_PARAM1 ,arUrls);
+        bundle.putInt(FullScreenImageActivity.ARG_PARAM3, page);
+        bundle.putString(FullScreenImageActivity.ARG_PARAM4, orderBy);
+        view.onSaveInstance(bundle);
     }
 
     private void loadPhotos(int page) {

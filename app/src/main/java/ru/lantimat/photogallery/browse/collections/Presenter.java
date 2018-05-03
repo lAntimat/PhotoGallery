@@ -2,6 +2,7 @@ package ru.lantimat.photogallery.browse.collections;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 
 import java.util.ArrayList;
 
@@ -13,6 +14,7 @@ import ru.lantimat.photogallery.API.UnsplashAPI;
 import ru.lantimat.photogallery.browse.photos.CategoryImagesListActivity;
 import ru.lantimat.photogallery.browse.photos.ImagesListFragment;
 import ru.lantimat.photogallery.collectionModel.Collection;
+import ru.lantimat.photogallery.photosModel.Urls;
 
 public class Presenter implements CollectionMVP.Presenter {
 
@@ -34,6 +36,13 @@ public class Presenter implements CollectionMVP.Presenter {
     public Presenter(String orderBy) {
         this.orderBy = orderBy;
         api = ApiUtils.getUnsplashAPI();
+    }
+
+    public Presenter(String orderBy, ArrayList<Collection> ar, int page) {
+        api = ApiUtils.getUnsplashAPI();
+        this.orderBy = orderBy;
+        this.ar.addAll(ar);
+        this.page = page;
     }
 
     @Override
@@ -78,6 +87,11 @@ public class Presenter implements CollectionMVP.Presenter {
         intent.putExtra(ImagesListFragment.ID, ar.get(position).getId().toString());
         intent.putExtra(CategoryImagesListActivity.TITLE, ar.get(position).getTitle());
         view.showCategoryImagesList(intent);
+    }
+
+    @Override
+    public void saveInstance(Bundle bundle) {
+
     }
 
     private void loadCollections(int page) {
