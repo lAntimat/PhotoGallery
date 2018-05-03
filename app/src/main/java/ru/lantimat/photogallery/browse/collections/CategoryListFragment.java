@@ -3,6 +3,7 @@ package ru.lantimat.photogallery.browse.collections;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
@@ -22,12 +23,10 @@ import ru.alexbykov.nopaginate.paginate.PaginateBuilder;
 import ru.lantimat.photogallery.R;
 import ru.lantimat.photogallery.browse.photos.ImagesListFragment;
 import ru.lantimat.photogallery.collectionModel.Collection;
+import ru.lantimat.photogallery.utils.ArraySaveHelper;
+import ru.lantimat.photogallery.utils.Constants;
 import ru.lantimat.photogallery.utils.ItemClickSupport;
-
-import static ru.lantimat.photogallery.browse.fullScreenImage.FullScreenImageActivity.ARG_PARAM1;
-import static ru.lantimat.photogallery.browse.fullScreenImage.FullScreenImageActivity.ARG_PARAM2;
-import static ru.lantimat.photogallery.browse.fullScreenImage.FullScreenImageActivity.ARG_PARAM3;
-import static ru.lantimat.photogallery.browse.fullScreenImage.FullScreenImageActivity.ARG_PARAM4;
+import ru.lantimat.photogallery.utils.Utils;
 
 /**
  * Created by GabdrakhmanovII on 28.07.2017.
@@ -60,11 +59,16 @@ public class CategoryListFragment extends Fragment implements CollectionMVP.View
 
         String orderBy = getArguments().get("orderBy").toString();
 
-        if (savedInstanceState != null) {
-            ar.addAll(savedInstanceState.getParcelableArrayList(ARG_PARAM1));
-            recyclerView.getLayoutManager().onRestoreInstanceState(savedInstanceState.getParcelable(ARG_PARAM2));
-            int page = savedInstanceState.getInt(ARG_PARAM3, -1);
-            orderBy = savedInstanceState.getString(ARG_PARAM4);
+        if (savedInstanceState != null) { //Если фрагмент
+            //ar.addAll(savedInstanceState.getParcelableArrayList(Constants.PARAM_AR));
+
+            ArraySaveHelper<Collection> saveHelper = new ArraySaveHelper<>();
+            ar.addAll(saveHelper.getArrayList(getContext(), Constants.PARAM_AR));
+
+            recyclerView.getLayoutManager().onRestoreInstanceState(savedInstanceState.getParcelable(Constants.PARAM_RECYCLER_STATE));
+            int page = savedInstanceState.getInt(Constants.PARAM_PAGE, -1);
+            orderBy = savedInstanceState.getString(Constants.PARAM_ORDER_BY);
+
             presenter = new Presenter(orderBy, ar, page);
             presenter.attachView(this);
             initPaginate(true);
@@ -82,10 +86,17 @@ public class CategoryListFragment extends Fragment implements CollectionMVP.View
         super.onAttach(context);
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putParcelable(Constants.PARAM_RECYCLER_STATE, recyclerView.getLayoutManager().onSaveInstanceState());
+        presenter.saveInstance(getContext(), outState);
+    }
+
     private void initRecyclerView(View v) {
 
         recyclerView = v.findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2, LinearLayoutManager.VERTICAL, false));
+        if(Utils.isPortraitMode(getActivity())) recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2, LinearLayoutManager.VERTICAL, false));
+        else recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 4, LinearLayoutManager.VERTICAL, false));
         recyclerView.setHasFixedSize(true);
         adapter = new CollectionRecyclerAdapter(getContext(), ar);
         recyclerView.setAdapter(adapter);
@@ -131,7 +142,7 @@ public class CategoryListFragment extends Fragment implements CollectionMVP.View
                     }
                 })
                 .build();
-        paginate.setNoMoreItems(true);
+        if(!retainState) paginate.setNoMoreItems(true);
     }
 
     @Override
@@ -174,7 +185,7 @@ public class CategoryListFragment extends Fragment implements CollectionMVP.View
 
     @Override
     public void onSaveInstance(Bundle bundle) {
-
+        super.onSaveInstanceState(bundle);
     }
 
     @Override

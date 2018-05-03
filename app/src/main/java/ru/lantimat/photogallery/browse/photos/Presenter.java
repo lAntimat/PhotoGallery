@@ -18,6 +18,7 @@ import ru.lantimat.photogallery.API.UnsplashAPI;
 import ru.lantimat.photogallery.browse.fullScreenImage.FullScreenImageActivity;
 import ru.lantimat.photogallery.photosModel.Photo;
 import ru.lantimat.photogallery.photosModel.Urls;
+import ru.lantimat.photogallery.utils.Constants;
 
 public class Presenter implements PhotosMVP.Presenter {
 
@@ -104,10 +105,10 @@ public class Presenter implements PhotosMVP.Presenter {
     @Override
     public void itemClick(Context context, int position, ImageView imageView) {
         Intent intent = new Intent(context, FullScreenImageActivity.class);
-        intent.putExtra(FullScreenImageActivity.ARG_PARAM1 ,arUrls);
-        intent.putExtra(FullScreenImageActivity.ARG_PARAM2, position);
-        intent.putExtra(FullScreenImageActivity.ARG_PARAM3, page);
-        intent.putExtra(FullScreenImageActivity.ARG_PARAM4, orderBy);
+        intent.putExtra(Constants.PARAM_AR, arUrls);
+        intent.putExtra(Constants.PARAM_POSITION, position);
+        intent.putExtra(Constants.PARAM_PAGE, page);
+        intent.putExtra(Constants.PARAM_ORDER_BY, orderBy);
 //        intent.putExtra(EXTRA_ANIMAL_IMAGE_TRANSITION_NAME, ViewCompat.getTransitionName(imageView));
 
         view.onItemClick(intent, imageView);
@@ -116,18 +117,18 @@ public class Presenter implements PhotosMVP.Presenter {
     @Override
     public void backPressed(Context context, int position) {
         Intent intent = new Intent();
-        intent.putExtra(FullScreenImageActivity.ARG_PARAM1 ,arUrls);
-        intent.putExtra(FullScreenImageActivity.ARG_PARAM2, position);
-        intent.putExtra(FullScreenImageActivity.ARG_PARAM3, page);
-        intent.putExtra(FullScreenImageActivity.ARG_PARAM4, orderBy);
+        intent.putExtra(Constants.PARAM_AR ,arUrls);
+        intent.putExtra(Constants.PARAM_POSITION, position);
+        intent.putExtra(Constants.PARAM_PAGE, page);
+        intent.putExtra(Constants.PARAM_ORDER_BY, orderBy);
         view.onBackPressed(intent);
     }
 
     @Override
     public void saveInstance(Bundle bundle) {
-        bundle.putParcelableArrayList(FullScreenImageActivity.ARG_PARAM1 ,arUrls);
-        bundle.putInt(FullScreenImageActivity.ARG_PARAM3, page);
-        bundle.putString(FullScreenImageActivity.ARG_PARAM4, orderBy);
+        bundle.putParcelableArrayList(Constants.PARAM_AR ,arUrls);
+        bundle.putInt(Constants.PARAM_PAGE, page);
+        bundle.putString(Constants.PARAM_ORDER_BY, orderBy);
         view.onSaveInstance(bundle);
     }
 

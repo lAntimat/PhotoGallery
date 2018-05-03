@@ -11,10 +11,14 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import ru.lantimat.photogallery.API.ApiUtils;
 import ru.lantimat.photogallery.API.UnsplashAPI;
+import ru.lantimat.photogallery.browse.fullScreenImage.FullScreenImageActivity;
 import ru.lantimat.photogallery.browse.photos.CategoryImagesListActivity;
 import ru.lantimat.photogallery.browse.photos.ImagesListFragment;
 import ru.lantimat.photogallery.collectionModel.Collection;
 import ru.lantimat.photogallery.photosModel.Urls;
+import ru.lantimat.photogallery.utils.ArraySaveHelper;
+import ru.lantimat.photogallery.utils.Constants;
+import ru.lantimat.photogallery.utils.Utils;
 
 public class Presenter implements CollectionMVP.Presenter {
 
@@ -90,9 +94,14 @@ public class Presenter implements CollectionMVP.Presenter {
     }
 
     @Override
-    public void saveInstance(Bundle bundle) {
-
+    public void saveInstance(Context context, Bundle bundle) {
+        ArraySaveHelper<Collection> saveHelper = new ArraySaveHelper<>();
+        saveHelper.saveArrayList(context, ar, Constants.PARAM_AR);
+        bundle.putInt(Constants.PARAM_PAGE, page);
+        bundle.putString(Constants.PARAM_ORDER_BY, orderBy);
+        view.onSaveInstance(bundle);
     }
+
 
     private void loadCollections(int page) {
         disposable = new DisposableObserver<ArrayList<Collection>>() {

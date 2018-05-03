@@ -23,8 +23,10 @@
         </activity>
         <activity
             android:name=".browse.fullScreenImage.FullScreenImageActivity"
-            android:theme="@style/Theme.Transparent"></activity>
-        <activity android:name=".browse.photos.CategoryImagesListActivity"></activity>
+            android:theme="@style/Theme.Transparent">
+        </activity>
+        <activity android:name=".browse.photos.CategoryImagesListActivity">
+        </activity>
     </application>
 
 </manifest>

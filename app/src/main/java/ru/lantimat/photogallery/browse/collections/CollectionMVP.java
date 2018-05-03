@@ -18,7 +18,7 @@ public interface CollectionMVP {
         void loadMore();
         void onRefresh();
         void itemClick(Context context, int position);
-        void saveInstance(Bundle bundle);
+        void saveInstance(Context context, Bundle bundle);
 
     }
 

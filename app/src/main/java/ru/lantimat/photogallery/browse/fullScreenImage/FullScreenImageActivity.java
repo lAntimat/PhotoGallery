@@ -14,14 +14,9 @@ import ru.lantimat.photogallery.R;
 import ru.lantimat.photogallery.browse.photos.PhotosMVP;
 import ru.lantimat.photogallery.browse.photos.Presenter;
 import ru.lantimat.photogallery.photosModel.Urls;
+import ru.lantimat.photogallery.utils.Constants;
 
 public class FullScreenImageActivity extends AppCompatActivity implements PhotosMVP.View {
-
-    public static final String ARG_PARAM1 = "ar";
-    public static final String ARG_PARAM2 = "position";
-    public static final String ARG_PARAM3 = "page";
-    public static final String ARG_PARAM4 = "orderBy";
-
 
     private ArrayList<Urls> ar;
     private int viewPagerPosition = 0;
@@ -47,10 +42,10 @@ public class FullScreenImageActivity extends AppCompatActivity implements Photos
         ar = new ArrayList<>();
 
         if (getIntent().getExtras() != null) {
-            ar = getIntent().getParcelableArrayListExtra(ARG_PARAM1);
-            viewPagerPosition = getIntent().getIntExtra(ARG_PARAM2, -1);
-            page = getIntent().getIntExtra(ARG_PARAM3, -1);
-            orderBy = getIntent().getStringExtra(ARG_PARAM4);
+            ar = getIntent().getParcelableArrayListExtra(Constants.PARAM_AR);
+            viewPagerPosition = getIntent().getIntExtra(Constants.PARAM_POSITION, -1);
+            page = getIntent().getIntExtra(Constants.PARAM_PAGE, -1);
+            orderBy = getIntent().getStringExtra(Constants.PARAM_ORDER_BY);
         }
 
         Toolbar toolbar = findViewById(R.id.toolbar);

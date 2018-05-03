@@ -2,6 +2,7 @@ package ru.lantimat.photogallery;
 
 import android.app.Application;
 
+import com.appizona.yehiahd.fastsave.FastSave;
 import com.bumptech.glide.annotation.GlideModule;
 import com.bumptech.glide.module.AppGlideModule;
 
@@ -14,5 +15,6 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         RetrofitClient.initClient(getApplicationContext());
+        FastSave.init(getApplicationContext());
     }
 }

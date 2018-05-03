@@ -1,11 +1,14 @@
 
 package ru.lantimat.photogallery.collectionModel;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Collection {
+public class Collection implements Parcelable {
 
     @SerializedName("id")
     @Expose
@@ -13,9 +16,6 @@ public class Collection {
     @SerializedName("title")
     @Expose
     private String title;
-    @SerializedName("description")
-    @Expose
-    private Object description;
     @SerializedName("published_at")
     @Expose
     private String publishedAt;
@@ -37,21 +37,9 @@ public class Collection {
     @SerializedName("share_key")
     @Expose
     private String shareKey;
-    @SerializedName("tags")
-    @Expose
-    private List<Tag> tags = null;
     @SerializedName("cover_photo")
     @Expose
     private CoverPhoto coverPhoto;
-    @SerializedName("preview_photos")
-    @Expose
-    private List<PreviewPhoto> previewPhotos = null;
-    @SerializedName("user")
-    @Expose
-    private User_ user;
-    @SerializedName("links")
-    @Expose
-    private Links___ links;
 
     public Integer getId() {
         return id;
@@ -67,14 +55,6 @@ public class Collection {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public Object getDescription() {
-        return description;
-    }
-
-    public void setDescription(Object description) {
-        this.description = description;
     }
 
     public String getPublishedAt() {
@@ -133,14 +113,6 @@ public class Collection {
         this.shareKey = shareKey;
     }
 
-    public List<Tag> getTags() {
-        return tags;
-    }
-
-    public void setTags(List<Tag> tags) {
-        this.tags = tags;
-    }
-
     public CoverPhoto getCoverPhoto() {
         return coverPhoto;
     }
@@ -149,28 +121,50 @@ public class Collection {
         this.coverPhoto = coverPhoto;
     }
 
-    public List<PreviewPhoto> getPreviewPhotos() {
-        return previewPhotos;
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public void setPreviewPhotos(List<PreviewPhoto> previewPhotos) {
-        this.previewPhotos = previewPhotos;
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.id);
+        dest.writeString(this.title);
+        dest.writeString(this.publishedAt);
+        dest.writeString(this.updatedAt);
+        dest.writeValue(this.curated);
+        dest.writeValue(this.featured);
+        dest.writeValue(this.totalPhotos);
+        dest.writeValue(this._private);
+        dest.writeString(this.shareKey);
+        dest.writeParcelable(this.coverPhoto, flags);
     }
 
-    public User_ getUser() {
-        return user;
+    public Collection() {
     }
 
-    public void setUser(User_ user) {
-        this.user = user;
+    protected Collection(Parcel in) {
+        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.title = in.readString();
+        this.publishedAt = in.readString();
+        this.updatedAt = in.readString();
+        this.curated = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.featured = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.totalPhotos = (Integer) in.readValue(Integer.class.getClassLoader());
+        this._private = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.shareKey = in.readString();
+        this.coverPhoto = in.readParcelable(CoverPhoto.class.getClassLoader());
     }
 
-    public Links___ getLinks() {
-        return links;
-    }
+    public static final Parcelable.Creator<Collection> CREATOR = new Parcelable.Creator<Collection>() {
+        @Override
+        public Collection createFromParcel(Parcel source) {
+            return new Collection(source);
+        }
 
-    public void setLinks(Links___ links) {
-        this.links = links;
-    }
-
+        @Override
+        public Collection[] newArray(int size) {
+            return new Collection[size];
+        }
+    };
 }

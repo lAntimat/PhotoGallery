@@ -24,13 +24,9 @@ import ru.alexbykov.nopaginate.paginate.PaginateBuilder;
 import ru.lantimat.photogallery.R;
 import ru.lantimat.photogallery.browse.fullScreenImage.FullScreenImageActivity;
 import ru.lantimat.photogallery.photosModel.Urls;
+import ru.lantimat.photogallery.utils.Constants;
 import ru.lantimat.photogallery.utils.ItemClickSupport;
 import ru.lantimat.photogallery.utils.Utils;
-
-import static ru.lantimat.photogallery.browse.fullScreenImage.FullScreenImageActivity.ARG_PARAM1;
-import static ru.lantimat.photogallery.browse.fullScreenImage.FullScreenImageActivity.ARG_PARAM2;
-import static ru.lantimat.photogallery.browse.fullScreenImage.FullScreenImageActivity.ARG_PARAM3;
-import static ru.lantimat.photogallery.browse.fullScreenImage.FullScreenImageActivity.ARG_PARAM4;
 
 /**
  * Created by GabdrakhmanovII on 28.07.2017.
@@ -73,13 +69,13 @@ public class ImagesListFragment extends Fragment implements PhotosMVP.View {
         String id = getArguments().getString(ID, "");
 
         if (savedInstanceState != null) {
-            ar.addAll(savedInstanceState.getParcelableArrayList(ARG_PARAM1));
-            recyclerView.getLayoutManager().onRestoreInstanceState(savedInstanceState.getParcelable(ARG_PARAM2));
-            int page = savedInstanceState.getInt(ARG_PARAM3, -1);
-            orderBy = savedInstanceState.getString(ARG_PARAM4);
+            recyclerView.getLayoutManager().onRestoreInstanceState(savedInstanceState.getParcelable(Constants.PARAM_RECYCLER_STATE));
+            int page = savedInstanceState.getInt(Constants.PARAM_PAGE, -1);
+            orderBy = savedInstanceState.getString(Constants.PARAM_ORDER_BY);
             presenter = new Presenter(orderBy, ar, page);
             presenter.attachView(this);
             initPaginate(true);
+
         } else if(!TextUtils.isEmpty(orderBy)) { //Если используем фрагмент для просмотра списка фотографий
             presenter = new Presenter(orderBy);
             presenter.attachView(this);
@@ -96,7 +92,7 @@ public class ImagesListFragment extends Fragment implements PhotosMVP.View {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable(FullScreenImageActivity.ARG_PARAM2, recyclerView.getLayoutManager().onSaveInstanceState());
+        outState.putParcelable(Constants.PARAM_RECYCLER_STATE, recyclerView.getLayoutManager().onSaveInstanceState());
         presenter.saveInstance(outState);
     }
 
@@ -201,17 +197,18 @@ public class ImagesListFragment extends Fragment implements PhotosMVP.View {
     @Override
     public void onSaveInstance(Bundle bundle) {
         super.onSaveInstanceState(bundle);
+        bundle.clear();
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==mRequestCode) {
-            ArrayList<Urls> arTemp = data.getParcelableArrayListExtra(ARG_PARAM1);
+            ArrayList<Urls> arTemp = data.getParcelableArrayListExtra(Constants.PARAM_AR);
             ar.clear();
             ar.addAll(arTemp);
-            int viewPagerPosition = data.getIntExtra(ARG_PARAM2, -1);
-            int page = data.getIntExtra(ARG_PARAM3, -1);
+            int viewPagerPosition = data.getIntExtra(Constants.PARAM_POSITION, -1);
+            int page = data.getIntExtra(Constants.PARAM_PAGE, -1);
             //String orderBy = data.getStringExtra(ARG_PARAM4);
 
             presenter = new Presenter(orderBy, ar, page);
