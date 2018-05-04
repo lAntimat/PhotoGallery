@@ -28,7 +28,7 @@ public class Presenter implements PhotosMVP.Presenter {
     public static String SORT_OLDEST = "oldest"; //Старейшие
     public static String SORT_POPULAR = "popular"; //Популярные
     private String orderBy = "";
-    private String id;
+    private String id; //id для загрузки определенной коллекции
 
     private static int PER_PAGE = 50; //Количество Items за один запрос
     private PhotosMVP.View view;
@@ -50,6 +50,14 @@ public class Presenter implements PhotosMVP.Presenter {
     public Presenter(String id, boolean isLoadById) {
         api = ApiUtils.getUnsplashAPI();
         this.id = id;
+        this.isLoadById = isLoadById;
+    }
+
+    public Presenter(String id, ArrayList<Urls> ar, int page, boolean isLoadById) {
+        api = ApiUtils.getUnsplashAPI();
+        this.id = id;
+        this.arUrls.addAll(ar);
+        this.page = page;
         this.isLoadById = isLoadById;
     }
 
@@ -109,7 +117,6 @@ public class Presenter implements PhotosMVP.Presenter {
         intent.putExtra(Constants.PARAM_POSITION, position);
         intent.putExtra(Constants.PARAM_PAGE, page);
         intent.putExtra(Constants.PARAM_ORDER_BY, orderBy);
-//        intent.putExtra(EXTRA_ANIMAL_IMAGE_TRANSITION_NAME, ViewCompat.getTransitionName(imageView));
 
         view.onItemClick(intent, imageView);
     }
@@ -129,14 +136,12 @@ public class Presenter implements PhotosMVP.Presenter {
         bundle.putParcelableArrayList(Constants.PARAM_AR ,arUrls);
         bundle.putInt(Constants.PARAM_PAGE, page);
         bundle.putString(Constants.PARAM_ORDER_BY, orderBy);
+        bundle.putString(Constants.PARAM_ID, id);
         view.onSaveInstance(bundle);
     }
 
     private void loadPhotos(int page) {
-        if (!isOnRefresh) { //При обновлении при помощи SwipeRefreshLayout ProgressBar не будет показыватсья
-            if(page==1) view.showLoading(false);
-            else view.showLoading(true);
-        }
+
         disposable = new DisposableObserver<ArrayList<Photo>>() {
             @Override
             public void onNext(ArrayList<Photo> photos) {

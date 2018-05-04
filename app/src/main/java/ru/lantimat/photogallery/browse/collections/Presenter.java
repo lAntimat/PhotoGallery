@@ -95,7 +95,7 @@ public class Presenter implements CollectionMVP.Presenter {
 
     @Override
     public void saveInstance(Context context, Bundle bundle) {
-        ArraySaveHelper<Collection> saveHelper = new ArraySaveHelper<>();
+        ArraySaveHelper saveHelper = new ArraySaveHelper();
         saveHelper.saveArrayList(context, ar, Constants.PARAM_AR);
         bundle.putInt(Constants.PARAM_PAGE, page);
         bundle.putString(Constants.PARAM_ORDER_BY, orderBy);

@@ -62,7 +62,7 @@ public class CategoryListFragment extends Fragment implements CollectionMVP.View
         if (savedInstanceState != null) { //Если фрагмент
             //ar.addAll(savedInstanceState.getParcelableArrayList(Constants.PARAM_AR));
 
-            ArraySaveHelper<Collection> saveHelper = new ArraySaveHelper<>();
+            ArraySaveHelper saveHelper = new ArraySaveHelper();
             ar.addAll(saveHelper.getArrayList(getContext(), Constants.PARAM_AR));
 
             recyclerView.getLayoutManager().onRestoreInstanceState(savedInstanceState.getParcelable(Constants.PARAM_RECYCLER_STATE));

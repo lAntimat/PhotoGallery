@@ -28,10 +28,6 @@ import ru.lantimat.photogallery.utils.Constants;
 import ru.lantimat.photogallery.utils.ItemClickSupport;
 import ru.lantimat.photogallery.utils.Utils;
 
-/**
- * Created by GabdrakhmanovII on 28.07.2017.
- */
-
 public class ImagesListFragment extends Fragment implements PhotosMVP.View {
 
     final static String TAG = "ImagesListFragment";
@@ -47,9 +43,11 @@ public class ImagesListFragment extends Fragment implements PhotosMVP.View {
     private ProgressBar progressBar;
     private Paginate paginate;
     private String orderBy;
+    private String id;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         //Сохраняем состояние фрагмента после пересоздания активити
         setRetainInstance(true);
     }
@@ -65,14 +63,18 @@ public class ImagesListFragment extends Fragment implements PhotosMVP.View {
 
         mRequestCode = getArguments().getInt(REQUEST_CODE, 10);
 
-        orderBy = getArguments().getString("orderBy", "");
-        String id = getArguments().getString(ID, "");
+        orderBy = getArguments().getString("orderBy", ""); //Тип сортировки. Это нужно для запросов к API
+        id = getArguments().getString(ID, ""); //Для загрузки коллекции по id.
 
-        if (savedInstanceState != null) {
+        if (savedInstanceState != null) { //Если после поворота экрана, были сохранены данные
             recyclerView.getLayoutManager().onRestoreInstanceState(savedInstanceState.getParcelable(Constants.PARAM_RECYCLER_STATE));
             int page = savedInstanceState.getInt(Constants.PARAM_PAGE, -1);
             orderBy = savedInstanceState.getString(Constants.PARAM_ORDER_BY);
-            presenter = new Presenter(orderBy, ar, page);
+            id = savedInstanceState.getString(Constants.PARAM_ID);
+
+
+            if(!TextUtils.isEmpty(id)) presenter = new Presenter(id, ar, page, true); //Если id коллекции не пустое, передаем id, номер последней загруженной страницы и массив с картинками.
+            else presenter = new Presenter(orderBy, ar, page); //иначе передаем тип сортировки, страницу и массив.
             presenter.attachView(this);
             initPaginate(true);
 
@@ -159,7 +161,7 @@ public class ImagesListFragment extends Fragment implements PhotosMVP.View {
                     }
                 })
                 .build();
-        if(!retainState) paginate.setNoMoreItems(true); //Костыль, что анимация загрузки не показывалась, когда recyclerView пустой
+        if(!retainState) paginate.setNoMoreItems(true); //Костыль, чтобы анимация загрузки не показывалась, когда recyclerView пустой
     }
 
     @Override
@@ -197,13 +199,14 @@ public class ImagesListFragment extends Fragment implements PhotosMVP.View {
     @Override
     public void onSaveInstance(Bundle bundle) {
         super.onSaveInstanceState(bundle);
-        bundle.clear();
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==mRequestCode) {
+
+            ///Этот метод будет использоваться для получения загруженных данных из FullScreenImageActivity
             ArrayList<Urls> arTemp = data.getParcelableArrayListExtra(Constants.PARAM_AR);
             ar.clear();
             ar.addAll(arTemp);
@@ -211,10 +214,13 @@ public class ImagesListFragment extends Fragment implements PhotosMVP.View {
             int page = data.getIntExtra(Constants.PARAM_PAGE, -1);
             //String orderBy = data.getStringExtra(ARG_PARAM4);
 
+            //Создаем экземпляр Presenter и передаем ему уже ранее загруженные данные
             presenter = new Presenter(orderBy, ar, page);
             presenter.attachView(this);
 
             adapter.notifyDataSetChanged();
+
+            //прокрутка списка к position, которая была у viewPager
             recyclerView.smoothScrollToPosition(viewPagerPosition);
         }
     }

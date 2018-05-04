@@ -1,5 +1,6 @@
 package ru.lantimat.photogallery.browse.photos;
 
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -41,10 +42,17 @@ public class CategoryImagesListActivity extends AppCompatActivity {
         bundle.putString(ImagesListFragment.ID, getIntent().getStringExtra(ImagesListFragment.ID));
         bundle.putInt(ImagesListFragment.REQUEST_CODE, 5);
 
-        fragment = new ImagesListFragment();
-        fragment.setArguments(bundle);
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.container, fragment, IMAGE_LIST_FRAGMENT_TAG);
-        ft.commit();
+        FragmentManager fm = getSupportFragmentManager();
+        fragment = (ImagesListFragment) fm.findFragmentByTag(IMAGE_LIST_FRAGMENT_TAG);
+
+        // create the fragment and data the first time
+        if (fragment == null) {
+            // add the fragment
+            fragment = new ImagesListFragment();
+            fragment.setArguments(bundle);
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.add(fragment, IMAGE_LIST_FRAGMENT_TAG);
+            ft.replace(R.id.container, fragment, IMAGE_LIST_FRAGMENT_TAG).commit();
+        }
     }
 }

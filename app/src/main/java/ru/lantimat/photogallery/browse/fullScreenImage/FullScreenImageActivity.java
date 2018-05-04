@@ -74,7 +74,7 @@ public class FullScreenImageActivity extends AppCompatActivity implements Photos
 
             @Override
             public void onPageSelected(int position) {
-                if(position + 3 == ar.size() & !isNoMoreItems) presenter.loadMore();
+                if(position + 3 >= ar.size() & !isNoMoreItems) presenter.loadMore();
             }
 
             @Override
