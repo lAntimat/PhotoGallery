@@ -1,7 +1,5 @@
-package ru.lantimat.photogallery.browse.fullScreenImage;
+package ru.lantimat.photogallery.ui.imageDetail;
 
-import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,26 +10,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.target.ThumbnailImageViewTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.github.chrisbanes.photoview.OnScaleChangedListener;
 import com.github.chrisbanes.photoview.PhotoView;
-import com.github.chuross.flinglayout.FlingLayout;
 
-import kotlin.Unit;
-import kotlin.jvm.functions.Function0;
-import kotlin.jvm.functions.Function3;
 import ru.lantimat.photogallery.R;
-import ru.lantimat.photogallery.photosModel.Urls;
+import ru.lantimat.photogallery.models.Urls;
 import ru.lantimat.photogallery.utils.GlideApp;
 
 public class ImageDetailFragment extends Fragment {
 
     private static final String EXTRA_IMAGE = "urls";
-    private FlingLayout flingLayout;
     private PhotoView imgDisplay;
 
     public ImageDetailFragment() {
@@ -69,7 +59,10 @@ public class ImageDetailFragment extends Fragment {
 
         initImageView(view);
 
+        //Запрос для загрузки thumbnail
         RequestBuilder<Drawable> thumbnailRequest = GlideApp.with(getActivity()).load(urls.getThumb());
+
+        //Загрузка основной картинки
         GlideApp.with(getActivity())
                 .load(urls.getRegular())
                 .thumbnail(thumbnailRequest)
@@ -81,24 +74,6 @@ public class ImageDetailFragment extends Fragment {
                         progressBar.setVisibility(View.INVISIBLE);
                     }
                 });
-    }
-
-    private void initFlingLayout(View v) {
-        //FlingLayout для поддержки закрытия изображения свайпом вверх/вниз
-
-        //flingLayout = v.findViewById(R.id.fling_layout);
-        flingLayout.setBackgroundColor(Color.argb(Math.round(230), 0, 0, 0));
-
-        flingLayout.setDismissListener(() -> {
-            //Toast.makeText(context, "dismiss!!", Toast.LENGTH_LONG).show();
-            getActivity().onBackPressed();
-            return Unit.INSTANCE;
-        });
-
-        flingLayout.setPositionChangeListener((top, left, dragRangeRate) -> {
-            flingLayout.setBackgroundColor(Color.argb(Math.round(230 * (1.0F - dragRangeRate)), 0, 0, 0));
-            return Unit.INSTANCE;
-        });
     }
 
     private void initImageView(View v) {

@@ -1,4 +1,4 @@
-package ru.lantimat.photogallery.browse;
+package ru.lantimat.photogallery.ui;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -7,23 +7,17 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import ru.lantimat.photogallery.MainActivity;
 import ru.lantimat.photogallery.R;
-import ru.lantimat.photogallery.browse.collections.CategoryListFragment;
-import ru.lantimat.photogallery.browse.photos.ImagesListFragment;
-import ru.lantimat.photogallery.browse.photos.ImagesRecyclerAdapter;
-import ru.lantimat.photogallery.browse.photos.PhotosMVP;
-import ru.lantimat.photogallery.browse.photos.Presenter;
-import ru.lantimat.photogallery.photosModel.Photo;
+import ru.lantimat.photogallery.ui.category.CategoryListFragment;
+import ru.lantimat.photogallery.ui.photos.ImagesListFragment;
+import ru.lantimat.photogallery.ui.photos.Presenter;
 
 /**
  * Created by GabdrakhmanovII on 28.07.2017.

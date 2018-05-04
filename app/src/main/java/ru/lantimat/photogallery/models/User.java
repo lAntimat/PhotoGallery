@@ -1,8 +1,5 @@
 
-package ru.lantimat.photogallery.photosModel;
-
-import android.os.Parcel;
-import android.os.Parcelable;
+package ru.lantimat.photogallery.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

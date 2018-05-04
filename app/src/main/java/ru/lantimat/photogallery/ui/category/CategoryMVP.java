@@ -1,4 +1,4 @@
-package ru.lantimat.photogallery.browse.collections;
+package ru.lantimat.photogallery.ui.category;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,12 +6,11 @@ import android.os.Bundle;
 
 import java.util.ArrayList;
 
-import ru.lantimat.photogallery.collectionModel.Collection;
-import ru.lantimat.photogallery.photosModel.Photo;
+import ru.lantimat.photogallery.models.Collection;
 import ru.lantimat.photogallery.utils.BasePresenter;
 import ru.lantimat.photogallery.utils.BaseView;
 
-public interface CollectionMVP {
+public interface CategoryMVP {
 
     interface Presenter extends BasePresenter<View> {
         void getCollections();

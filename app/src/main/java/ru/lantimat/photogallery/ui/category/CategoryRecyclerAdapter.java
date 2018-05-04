@@ -1,4 +1,4 @@
-package ru.lantimat.photogallery.browse.collections;
+package ru.lantimat.photogallery.ui.category;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -14,7 +14,7 @@ import com.bumptech.glide.RequestBuilder;
 import java.util.ArrayList;
 
 import ru.lantimat.photogallery.R;
-import ru.lantimat.photogallery.collectionModel.Collection;
+import ru.lantimat.photogallery.models.Collection;
 import ru.lantimat.photogallery.utils.GlideApp;
 import ru.lantimat.photogallery.utils.SquareImageView;
 
@@ -22,14 +22,14 @@ import ru.lantimat.photogallery.utils.SquareImageView;
  * Created by GabdrakhmanovII on 03.11.2017.
  */
 
-public class CollectionRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class CategoryRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     final static String TAG = "CollectionAdapter";
 
     private ArrayList<Collection> mList;
     private Context context;
 
 
-    public CollectionRecyclerAdapter(Context context, ArrayList<Collection> itemList) {
+    public CategoryRecyclerAdapter(Context context, ArrayList<Collection> itemList) {
         this.context = context;
         this.mList = itemList;
     }

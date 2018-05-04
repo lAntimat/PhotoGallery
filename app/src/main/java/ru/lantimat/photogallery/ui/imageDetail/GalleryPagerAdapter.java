@@ -1,4 +1,4 @@
-package ru.lantimat.photogallery.browse.fullScreenImage;
+package ru.lantimat.photogallery.ui.imageDetail;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import java.util.ArrayList;
 
-import ru.lantimat.photogallery.photosModel.Urls;
+import ru.lantimat.photogallery.models.Urls;
 
 public class GalleryPagerAdapter extends FragmentStatePagerAdapter {
 

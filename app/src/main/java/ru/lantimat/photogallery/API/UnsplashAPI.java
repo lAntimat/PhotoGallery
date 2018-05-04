@@ -6,8 +6,8 @@ import io.reactivex.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
-import ru.lantimat.photogallery.collectionModel.Collection;
-import ru.lantimat.photogallery.photosModel.Photo;
+import ru.lantimat.photogallery.models.Collection;
+import ru.lantimat.photogallery.models.Photo;
 
 /**
  * Created by GabdrakhmanovII on 08.12.2017.

@@ -1,5 +1,5 @@
 
-package ru.lantimat.photogallery.photosModel;
+package ru.lantimat.photogallery.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;

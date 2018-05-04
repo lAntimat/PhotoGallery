@@ -1,4 +1,4 @@
-package ru.lantimat.photogallery.browse.photos;
+package ru.lantimat.photogallery.ui.photos;
 
 import android.content.Context;
 import android.content.Intent;
@@ -22,8 +22,7 @@ import ru.alexbykov.nopaginate.callback.OnLoadMoreListener;
 import ru.alexbykov.nopaginate.paginate.Paginate;
 import ru.alexbykov.nopaginate.paginate.PaginateBuilder;
 import ru.lantimat.photogallery.R;
-import ru.lantimat.photogallery.browse.fullScreenImage.FullScreenImageActivity;
-import ru.lantimat.photogallery.photosModel.Urls;
+import ru.lantimat.photogallery.models.Urls;
 import ru.lantimat.photogallery.utils.Constants;
 import ru.lantimat.photogallery.utils.ItemClickSupport;
 import ru.lantimat.photogallery.utils.Utils;

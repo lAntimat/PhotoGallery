@@ -1,16 +1,13 @@
-package ru.lantimat.photogallery.browse.photos;
+package ru.lantimat.photogallery.ui.photos;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
 
-import ru.lantimat.photogallery.photosModel.Photo;
-import ru.lantimat.photogallery.photosModel.Urls;
+import ru.lantimat.photogallery.models.Urls;
 import ru.lantimat.photogallery.utils.BasePresenter;
 import ru.lantimat.photogallery.utils.BaseView;
 

@@ -10,7 +10,7 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-import ru.lantimat.photogallery.collectionModel.Collection;
+import ru.lantimat.photogallery.models.Collection;
 
 public class ArraySaveHelper {
 

@@ -1,4 +1,4 @@
-package ru.lantimat.photogallery.browse.collections;
+package ru.lantimat.photogallery.ui.category;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,16 +11,12 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import ru.lantimat.photogallery.API.ApiUtils;
 import ru.lantimat.photogallery.API.UnsplashAPI;
-import ru.lantimat.photogallery.browse.fullScreenImage.FullScreenImageActivity;
-import ru.lantimat.photogallery.browse.photos.CategoryImagesListActivity;
-import ru.lantimat.photogallery.browse.photos.ImagesListFragment;
-import ru.lantimat.photogallery.collectionModel.Collection;
-import ru.lantimat.photogallery.photosModel.Urls;
+import ru.lantimat.photogallery.ui.photos.ImagesListFragment;
+import ru.lantimat.photogallery.models.Collection;
 import ru.lantimat.photogallery.utils.ArraySaveHelper;
 import ru.lantimat.photogallery.utils.Constants;
-import ru.lantimat.photogallery.utils.Utils;
 
-public class Presenter implements CollectionMVP.Presenter {
+public class Presenter implements CategoryMVP.Presenter {
 
     //Виды сортировки фотографий
     public static String SORT_LATEST = "latest"; //Новейшие
@@ -29,7 +25,7 @@ public class Presenter implements CollectionMVP.Presenter {
     private String orderBy = SORT_LATEST; //По умолчанию latest
 
     private static int PER_PAGE = 50; //Количество Items за один запрос
-    private CollectionMVP.View view;
+    private CategoryMVP.View view;
     private UnsplashAPI api;
     private DisposableObserver disposable;
     private int page = 1;
@@ -50,7 +46,7 @@ public class Presenter implements CollectionMVP.Presenter {
     }
 
     @Override
-    public void attachView(CollectionMVP.View view) {
+    public void attachView(CategoryMVP.View view) {
         this.view = view;
     }
 
@@ -87,9 +83,9 @@ public class Presenter implements CollectionMVP.Presenter {
 
     @Override
     public void itemClick(Context context, int position) {
-        Intent intent = new Intent(context, CategoryImagesListActivity.class);
+        Intent intent = new Intent(context, CategoryByIdImagesListActivity.class);
         intent.putExtra(ImagesListFragment.ID, ar.get(position).getId().toString());
-        intent.putExtra(CategoryImagesListActivity.TITLE, ar.get(position).getTitle());
+        intent.putExtra(CategoryByIdImagesListActivity.TITLE, ar.get(position).getTitle());
         view.showCategoryImagesList(intent);
     }
 

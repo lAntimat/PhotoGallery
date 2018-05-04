@@ -1,5 +1,5 @@
 
-package ru.lantimat.photogallery.photosModel;
+package ru.lantimat.photogallery.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -9,7 +9,7 @@ import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Photo {
+public class CoverPhoto implements Parcelable {
 
     @SerializedName("id")
     @Expose
@@ -31,13 +31,10 @@ public class Photo {
     private String color;
     @SerializedName("description")
     @Expose
-    private Object description;
+    private String description;
     @SerializedName("categories")
     @Expose
     private List<Object> categories = null;
-    @SerializedName("user")
-    @Expose
-    private User user;
     @SerializedName("urls")
     @Expose
     private Urls urls;
@@ -53,9 +50,6 @@ public class Photo {
     @SerializedName("likes")
     @Expose
     private Integer likes;
-    @SerializedName("current_user_collections")
-    @Expose
-    private List<Object> currentUserCollections = null;
 
     public String getId() {
         return id;
@@ -105,11 +99,11 @@ public class Photo {
         this.color = color;
     }
 
-    public Object getDescription() {
+    public String getDescription() {
         return description;
     }
 
-    public void setDescription(Object description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 
@@ -119,14 +113,6 @@ public class Photo {
 
     public void setCategories(List<Object> categories) {
         this.categories = categories;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public Urls getUrls() {
@@ -169,16 +155,57 @@ public class Photo {
         this.likes = likes;
     }
 
-    public List<Object> getCurrentUserCollections() {
-        return currentUserCollections;
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public void setCurrentUserCollections(List<Object> currentUserCollections) {
-        this.currentUserCollections = currentUserCollections;
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.id);
+        dest.writeString(this.createdAt);
+        dest.writeString(this.updatedAt);
+        dest.writeValue(this.width);
+        dest.writeValue(this.height);
+        dest.writeString(this.color);
+        dest.writeString(this.description);
+        dest.writeList(this.categories);
+        dest.writeParcelable(this.urls, flags);
+        dest.writeParcelable(this.links, flags);
+        dest.writeValue(this.likedByUser);
+        dest.writeValue(this.sponsored);
+        dest.writeValue(this.likes);
     }
 
-
-    public Photo() {
+    public CoverPhoto() {
     }
 
+    protected CoverPhoto(Parcel in) {
+        this.id = in.readString();
+        this.createdAt = in.readString();
+        this.updatedAt = in.readString();
+        this.width = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.height = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.color = in.readString();
+        this.description = in.readString();
+        this.categories = new ArrayList<Object>();
+        in.readList(this.categories, Object.class.getClassLoader());
+        this.urls = in.readParcelable(Urls.class.getClassLoader());
+        this.links = in.readParcelable(Links_.class.getClassLoader());
+        this.likedByUser = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.sponsored = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.likes = (Integer) in.readValue(Integer.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<CoverPhoto> CREATOR = new Parcelable.Creator<CoverPhoto>() {
+        @Override
+        public CoverPhoto createFromParcel(Parcel source) {
+            return new CoverPhoto(source);
+        }
+
+        @Override
+        public CoverPhoto[] newArray(int size) {
+            return new CoverPhoto[size];
+        }
+    };
 }

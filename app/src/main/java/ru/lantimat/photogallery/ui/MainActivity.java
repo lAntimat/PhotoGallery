@@ -1,4 +1,4 @@
-package ru.lantimat.photogallery;
+package ru.lantimat.photogallery.ui;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -8,11 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 
-
-import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
-import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
-
-import ru.lantimat.photogallery.browse.BrowseFragment;
+import ru.lantimat.photogallery.R;
 import ru.lantimat.photogallery.utils.NonSwipeableViewPager;
 
 public class MainActivity extends AppCompatActivity {
@@ -28,15 +24,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Обзор");
-        //getSupportActionBar().setSubtitle("MainActivity");
-        //setupBottomBar();
+        getSupportActionBar().setTitle(R.string.app_name);
+
         initViewPager();
     }
 
     private void initViewPager() {
+
+        //для добавления в будущем Bottom Bar сразу делаю с ViewPager`ом
 
         //Инициализация ViewPager
         pager = findViewById(R.id.viewPager);

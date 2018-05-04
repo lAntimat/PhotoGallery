@@ -1,22 +1,21 @@
-package ru.lantimat.photogallery.browse.fullScreenImage;
+package ru.lantimat.photogallery.ui.imageDetail;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
 
 import ru.lantimat.photogallery.R;
-import ru.lantimat.photogallery.browse.photos.PhotosMVP;
-import ru.lantimat.photogallery.browse.photos.Presenter;
-import ru.lantimat.photogallery.photosModel.Urls;
+import ru.lantimat.photogallery.models.Urls;
+import ru.lantimat.photogallery.ui.photos.PhotosMVP;
+import ru.lantimat.photogallery.ui.photos.Presenter;
 import ru.lantimat.photogallery.utils.Constants;
 
-public class FullScreenImageActivity extends AppCompatActivity implements PhotosMVP.View {
+public class ImageDetailActivity extends AppCompatActivity implements PhotosMVP.View {
 
     private ArrayList<Urls> ar;
     private int viewPagerPosition = 0;

@@ -1,10 +1,8 @@
-package ru.lantimat.photogallery.browse.photos;
+package ru.lantimat.photogallery.ui.photos;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.support.v4.view.ViewCompat;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -15,9 +13,9 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import ru.lantimat.photogallery.API.ApiUtils;
 import ru.lantimat.photogallery.API.UnsplashAPI;
-import ru.lantimat.photogallery.browse.fullScreenImage.FullScreenImageActivity;
-import ru.lantimat.photogallery.photosModel.Photo;
-import ru.lantimat.photogallery.photosModel.Urls;
+import ru.lantimat.photogallery.models.Urls;
+import ru.lantimat.photogallery.models.Photo;
+import ru.lantimat.photogallery.ui.imageDetail.ImageDetailActivity;
 import ru.lantimat.photogallery.utils.Constants;
 
 public class Presenter implements PhotosMVP.Presenter {
@@ -112,7 +110,7 @@ public class Presenter implements PhotosMVP.Presenter {
 
     @Override
     public void itemClick(Context context, int position, ImageView imageView) {
-        Intent intent = new Intent(context, FullScreenImageActivity.class);
+        Intent intent = new Intent(context, ImageDetailActivity.class);
         intent.putExtra(Constants.PARAM_AR, arUrls);
         intent.putExtra(Constants.PARAM_POSITION, position);
         intent.putExtra(Constants.PARAM_PAGE, page);

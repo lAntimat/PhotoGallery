@@ -2,4 +2,5 @@
     <string name="app_name">3 angle gallery</string>
     <string name="bottom_bar_photo">Фото</string>
     <string name="bottom_bar_collection">Коллекции</string>
+    <string name="browse">Обзор</string>
 </resources>

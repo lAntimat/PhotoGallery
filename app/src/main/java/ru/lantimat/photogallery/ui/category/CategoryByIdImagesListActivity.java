@@ -1,4 +1,4 @@
-package ru.lantimat.photogallery.browse.photos;
+package ru.lantimat.photogallery.ui.category;
 
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -7,8 +7,9 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 
 import ru.lantimat.photogallery.R;
+import ru.lantimat.photogallery.ui.photos.ImagesListFragment;
 
-public class CategoryImagesListActivity extends AppCompatActivity {
+public class CategoryByIdImagesListActivity extends AppCompatActivity {
 
     public static String TITLE = "title";
     private final String IMAGE_LIST_FRAGMENT_TAG = "imageListTag";

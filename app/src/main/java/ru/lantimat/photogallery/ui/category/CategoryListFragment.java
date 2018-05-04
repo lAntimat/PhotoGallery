@@ -1,11 +1,10 @@
-package ru.lantimat.photogallery.browse.collections;
+package ru.lantimat.photogallery.ui.category;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,8 +20,7 @@ import ru.alexbykov.nopaginate.callback.OnLoadMoreListener;
 import ru.alexbykov.nopaginate.paginate.Paginate;
 import ru.alexbykov.nopaginate.paginate.PaginateBuilder;
 import ru.lantimat.photogallery.R;
-import ru.lantimat.photogallery.browse.photos.ImagesListFragment;
-import ru.lantimat.photogallery.collectionModel.Collection;
+import ru.lantimat.photogallery.models.Collection;
 import ru.lantimat.photogallery.utils.ArraySaveHelper;
 import ru.lantimat.photogallery.utils.Constants;
 import ru.lantimat.photogallery.utils.ItemClickSupport;
@@ -32,14 +30,14 @@ import ru.lantimat.photogallery.utils.Utils;
  * Created by GabdrakhmanovII on 28.07.2017.
  */
 
-public class CategoryListFragment extends Fragment implements CollectionMVP.View {
+public class CategoryListFragment extends Fragment implements CategoryMVP.View {
 
     final static String TAG = "CollectionListFragment";
 
     private RecyclerView recyclerView;
-    private CollectionRecyclerAdapter adapter;
+    private CategoryRecyclerAdapter adapter;
     private ArrayList<Collection> ar = new ArrayList<>();
-    private CollectionMVP.Presenter presenter;
+    private CategoryMVP.Presenter presenter;
     private ProgressBar progressBar;
     private Paginate paginate;
 
@@ -98,7 +96,7 @@ public class CategoryListFragment extends Fragment implements CollectionMVP.View
         if(Utils.isPortraitMode(getActivity())) recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2, LinearLayoutManager.VERTICAL, false));
         else recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 4, LinearLayoutManager.VERTICAL, false));
         recyclerView.setHasFixedSize(true);
-        adapter = new CollectionRecyclerAdapter(getContext(), ar);
+        adapter = new CategoryRecyclerAdapter(getContext(), ar);
         recyclerView.setAdapter(adapter);
 
         ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
@@ -169,7 +167,7 @@ public class CategoryListFragment extends Fragment implements CollectionMVP.View
     }
 
     @Override
-    public void showCollections(ArrayList<ru.lantimat.photogallery.collectionModel.Collection> ar) {
+    public void showCollections(ArrayList<Collection> ar) {
         //stopScroll, для того, чтобы после loadMore прокрутка не продолжилась
         recyclerView.stopScroll();
         this.ar.clear();

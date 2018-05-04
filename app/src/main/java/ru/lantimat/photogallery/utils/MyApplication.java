@@ -1,4 +1,4 @@
-package ru.lantimat.photogallery;
+package ru.lantimat.photogallery.utils;
 
 import android.app.Application;
 
